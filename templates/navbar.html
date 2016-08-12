@@ -1,0 +1,38 @@
+{{define "navbar"}}
+    <nav class = "navbar navbar-default">
+
+        <div class = "container-fluid">
+
+            <div class = "navbar-header">
+
+                <a href = "/" class = "navbar-brand">MODULIST</a>
+
+                <ul class = "nav navbar-nav">
+                  <li><a href = "/search">Suche</a></li>
+                </ul>
+
+            </div>
+
+            <ul class = "nav navbar-nav navbar-right">
+
+                {{ with .User }}
+                <li><a id = "grayed-text">Ahoy, {{ .Name }}</a></li>
+                <li><a href = "/settings">Einstellungen</a></li>
+                  {{ if .Admin }}
+                <li class = "dropdown">
+                    <a href = "#" class = "dropdown-toggle" data-toggle = "dropdown" role = "button">Admin <span class = "caret"></span></a>
+                    <ul class = "dropdown-menu" role = "menu">
+                        <li><a href = "/admin/users">Nutzer verwalten</a></li>
+                        <li><a href = "/admin/send-feedback">Feedback versenden</a></li>
+                    </ul>
+                </li>
+                  {{ end }}
+                {{ end }}
+                <li><a href = "/logout">Log out</a></li>
+
+            </ul>
+
+        </div>
+
+    </nav>
+{{end}}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+  {{template "head" .}}
+  <body>
+
+    {{template "navbar" .}}
+    <main class = "container-fluid">
+
+      <div class = "row">
+
+        <div class = "col-sm-9">
+
+          {{ with .Query }}
+            <h2>Suche nach &bdquo;{{ . }}&rdquo;...</h2>
+          {{ else }}
+            <h2>Suche</h2>
+          {{end}}
+
+        </div>
+
+        <div class = "col-sm-3">
+
+          <form action="/search" method="GET" class="form-horizontal">
+
+            <div class = "form-group">
+
+                <div class = "col-lg-9">
+
+                    <input class="form-control" type="text" name="q" placeholder="Modulname">
+
+                </div>
+
+                <div class = "col-lg-3">
+
+                    <button type = "submit" class = "btn btn-primary">Suchen</button>
+
+                </div>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <div class = "row" style = "margin-top: 20px;">
+
+        <table class = "table table-striped table-hover">
+
+            <thead>
+
+                <tr>
+                    <th>Modul-ID</th>
+                    <th>Version</th>
+                    <th>Modultitel</th>
+                    <th>LP</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+              {{with .Modules}}
+                  {{range .}}
+                      <tr id="module-{{.ID}}">
+                          <td>{{.ModulID}}</td>
+                          <td>{{.Version}}</td>
+                          <td><a href = "/review/{{.ID}}">{{.Title}}</a></td>
+                          <td>{{.LP}}</td>
+                          <td style="text-align: right;">
+                          {{ $fbcount := .Feedback | len}}
+                          {{if eq $fbcount 0}}
+                            <span class="label label-default">{{$fbcount}}</span>
+                          {{else if lt $fbcount 3}}
+                            <span class="label label-primary">{{$fbcount}}</span>
+                          {{else}}
+                            <span class="label label-success">{{$fbcount}}</span>
+                          {{end}}
+                          </td>
+                          <td>
+                            {{ if .Done }}
+                              <a style="cursor: pointer;" onclick="checkModule({{.ID}})"><span class="glyphicon glyphicon-check"></span></a>
+                            {{ else }}
+                              <a style="cursor: pointer;" onclick="checkModule({{.ID}})"><span class="glyphicon glyphicon-unchecked"></span></a>
+                            {{ end }}
+                          </td>
+                      </tr>
+                  {{end}}
+              {{end}}
+
+                  </tbody>
+
+              </table>
+      </div>
+
+    </main>
+
+    <script src = "/static/js/jquery.min.js"></script>
+    <script src = "/static/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>

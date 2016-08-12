@@ -1,2 +1,3 @@
-# modulist
-Temporary
+# MODULIST
+
+Temporary location of MODULIST project.
