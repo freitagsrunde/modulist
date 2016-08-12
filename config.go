@@ -18,6 +18,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// App struct contains all relevant information read
+// from .env file and pointers to connectors of middleware.
 type App struct {
 	TLS         bool
 	TLSCertFile string
@@ -25,6 +27,7 @@ type App struct {
 	IP          string
 	Port        string
 	Stage       string
+	HashCost    int
 	Router      *gin.Engine
 	DB          *gorm.DB
 }
@@ -98,6 +101,13 @@ func InitApp() *App {
 	// Store stage mode the application is running in.
 	app.Stage = os.Getenv("DEPLOY_STAGE")
 
+	// Save bcrypt hash cost from .env.
+	// In production, this value should be at least '16'.
+	app.HashCost, err = strconv.Atoi(os.Getenv("APP_PASSWORD_HASH_COST"))
+	if err != nil {
+		log.Fatal("[InitApp] Could not load APP_PASSWORD_HASH_COST from .env file. Missing or not an integer?")
+	}
+
 	// Before starting gin, check if we are running in
 	// production and do not want to log everything.
 	if app.Stage == "prod" {
@@ -113,7 +123,7 @@ func InitApp() *App {
 	// Register frontend routes.
 	app.DefineRoutes()
 
-	// Check if a command line flag was provided.
+	// Check if an initialization command line flag was provided.
 	initFlag := flag.Bool("init", false, "Append this flag in order to initialize a new setup of MODULIST. This includes the interactive creation of the default admin user.")
 	flag.Parse()
 
@@ -126,22 +136,30 @@ func InitApp() *App {
 		// in .env file to main database.
 		// TODO: do that.
 
-		// Ask user for data of default admin user to create.
+		// Default admin user creation.
+		fmt.Printf("\n========== Begin initializing MODULIST ==========\n\nCreate default admin user.\n")
 
 		var NewAdmin db.User
+
+		// Assign new UUID v4.
 		NewAdmin.ID = fmt.Sprintf("%s", uuid.NewV4())
 
-		fmt.Printf("\nInitializing MODULIST.\n\nCreate default admin user.\nFirst name: ")
+		// Ask for first name.
+		fmt.Printf("First name: ")
 		fmt.Scanln(&NewAdmin.FirstName)
 
+		// Ask for last name.
 		fmt.Printf("Last name: ")
 		fmt.Scanln(&NewAdmin.LastName)
 
+		// Ask for mail address.
 		fmt.Printf("Mail address: ")
 		fmt.Scanln(&NewAdmin.Mail)
 
+		// Set mail verification flag of this user to false, initially.
 		NewAdmin.MailVerified = false
 
+		// Ask for password.
 		fmt.Printf("Password: ")
 		pwd, err := gopass.GetPasswd()
 		if err != nil {
@@ -150,8 +168,8 @@ func InitApp() *App {
 
 		fmt.Print("\nGenerating secure hash of provided password. Please wait... ")
 
-		// TODO: use .env for hash cost.
-		hash, err := bcrypt.GenerateFromPassword(pwd, 16)
+		// Generate a secure bcrypt hash from supplied password.
+		hash, err := bcrypt.GenerateFromPassword(pwd, app.HashCost)
 		if err != nil {
 			// If there was an error during hash creation - terminate immediately.
 			log.Fatal("[InitApp] Error while generating hash in user creation. Terminating.")
@@ -160,15 +178,16 @@ func InitApp() *App {
 
 		fmt.Print("Done!\n\n")
 
-		// TODO: make useful.
-		NewAdmin.Privileges = 1
-		NewAdmin.Enabled = true
+		// Give this user admin permissions.
+		NewAdmin.Privileges = db.PRIVILEGE_ADMIN
 
-		fmt.Printf("New admin:\n%v\n", NewAdmin)
+		// Set account to enabled, initially.
+		NewAdmin.Enabled = true
 
 		// Save new admin to database.
 		app.DB.Create(&NewAdmin)
-		fmt.Printf("\nCreated new admin user with mail address '%s'.\n\n", NewAdmin.Mail)
+		fmt.Printf("Created new admin user with mail address '%s'.\n\n", NewAdmin.Mail)
+		fmt.Printf("==========  End initializing MODULIST  ==========\n\n\n")
 	}
 
 	return app

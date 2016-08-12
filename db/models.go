@@ -2,7 +2,10 @@
 // Connection creation, model representation and other things.
 package db
 
-import ()
+const (
+	PRIVILEGE_ADMIN = iota
+	PRIVILEGE_REVIEWER
+)
 
 type User struct {
 	ID           string `gorm:"primary_key"`
