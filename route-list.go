@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Functions
+
 func (app *App) ListModules(c *gin.Context) {}
 
 func (app *App) FilterModules(c *gin.Context) {}

@@ -1,5 +1,3 @@
-// Package modulist is a web-based review tool for module
-// descriptions developed by Freitagsrunde at TU Berlin.
 package main
 
 import (
@@ -20,6 +18,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Structs
+
 // App struct contains all relevant information read
 // from .env file and pointers to connectors of middleware.
 type App struct {
@@ -35,6 +35,8 @@ type App struct {
 	DB          *gorm.DB
 	Validator   *validator.Validate
 }
+
+// Functions
 
 // DefineRoutes registers all frontend endpoints.
 // These will make up the web interface of MODULIST.

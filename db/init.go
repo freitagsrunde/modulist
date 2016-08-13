@@ -12,6 +12,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
+// Functions
+
 // InitDB connects to the database specified by the .env file.
 // It returns the correctly configured connector.
 func InitDB() *gorm.DB {

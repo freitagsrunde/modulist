@@ -5,9 +5,13 @@ import (
 	"os"
 	"time"
 
+	"net/http"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/numbleroot/modulist/db"
 )
+
+// Functions
 
 // CreateJWT produces a JSON Web Token (JWT) with
 // authenticated claims based on the values in the
@@ -37,4 +41,13 @@ func (app *App) CreateJWT(User *db.User) string {
 	}
 
 	return sessionJWTString
+}
+
+// Authorize takes a supplied request, extracts the to-
+// be-included JWT out of the set cookies and validates
+// it on various aspects.
+func (app *App) Authorize(Request *http.Request) (bool, *db.User, string) {
+
+	// TODO: Implement this.
+	return true, nil, ""
 }

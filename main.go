@@ -6,6 +6,8 @@ import (
 	"fmt"
 )
 
+// Functions
+
 func main() {
 
 	// Init app.

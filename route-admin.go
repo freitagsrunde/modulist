@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Functions
+
 func (app *App) ListUsers(c *gin.Context) {}
 
 func (app *App) CreateUser(c *gin.Context) {}

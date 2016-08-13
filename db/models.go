@@ -1,11 +1,13 @@
-// Package db provides us with everything database related.
-// Connection creation, model representation and other things.
 package db
+
+// Constants
 
 const (
 	PRIVILEGE_ADMIN = iota
 	PRIVILEGE_REVIEWER
 )
+
+// Structs
 
 type User struct {
 	ID           string `gorm:"primary_key"`
