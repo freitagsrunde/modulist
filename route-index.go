@@ -72,26 +72,30 @@ func (app *App) Login(c *gin.Context) {
 	var User db.User
 	app.DB.First(&User, "\"mail\" = ?", Payload.Mail)
 
-	// Check if user exists.
-	if User.ID == "" {
-
-		// TODO: Signal error.
-	}
-
 	// Compare password hash from database with possible plaintext
 	// password from submitted login form. Compares in constant time.
 	err = bcrypt.CompareHashAndPassword([]byte(User.PasswordHash), []byte(Payload.Password))
-	if err != nil {
+	if (User.ID == "") || (err != nil) {
 
 		// Signal client that an error occured.
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
 			"PageTitle":  "Willkommen bei MODULIST",
 			"MainTitle":  "Willkommen bei MODULIST",
-			"FatalError": "Mail and/or password is wrong.",
+			"FatalError": "Mail and/or password wrong.",
 		})
 
 		return
 	}
+
+	// User exists and supplied correct login data,
+	// generate JSON Web Token (JWT).
+	jwt := app.CreateJWT(&User)
+
+	// TODO: Set 'secure' to true.
+	c.SetCookie("Bearer", jwt, int(app.JWTValidFor.Seconds()), "", "", false, true)
+
+	// Redirect to first authorized page.
+	c.Redirect(http.StatusFound, "/modules")
 }
 
 func (app *App) Logout(c *gin.Context) {}

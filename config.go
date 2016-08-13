@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
@@ -29,6 +30,7 @@ type App struct {
 	Port        string
 	Stage       string
 	HashCost    int
+	JWTValidFor time.Duration
 	Router      *gin.Engine
 	DB          *gorm.DB
 	Validator   *validator.Validate
@@ -109,6 +111,13 @@ func InitApp() *App {
 	if err != nil {
 		log.Fatal("[InitApp] Could not load APP_PASSWORD_HASH_COST from .env file. Missing or not an integer?")
 	}
+
+	// Set JWT session token validity to the duration in minutes loaded from environment.
+	validFor, err := strconv.Atoi(os.Getenv("APP_JWT_VALID_FOR"))
+	if err != nil {
+		log.Fatal("[InitApp] Could not load APP_JWT_VALID_FOR from .env file. Missing or not an integer?")
+	}
+	app.JWTValidFor = time.Duration(validFor) * time.Minute
 
 	// Before starting gin, check if we are running in
 	// production and do not want to log everything.
