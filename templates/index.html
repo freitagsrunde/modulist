@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html>
 
-    {{template "head" .}}
+    {{ template "head" . }}
 
-    <style type = "text/css">
+        <style type = "text/css">
 
-        html, body {
-            background-color: #eee;
-            margin: 0;
-            overflow: hidden;
-            padding: 0;
-        }
+            html, body {
+                background-color: #eee;
+                margin: 0;
+                overflow: hidden;
+                padding: 0;
+            }
 
-        main {
-            background-color: white;
-            box-shadow: 0 0 2px black;
-            color: black;
-            font-family: 'Open Sans', 'Droid Sans', Avenir, 'Segoe UI', sans-serif;
-            left: 50%;
-            margin: -14em 0 0 -40ex;
-            padding: 1ex;
-            position: absolute;
-            top: 50%;
-            width: 80ex;
-            border-radius: 5px;
-        }
+            main {
+                background-color: white;
+                box-shadow: 0 0 2px black;
+                color: black;
+                font-family: 'Open Sans', 'Droid Sans', Avenir, 'Segoe UI', sans-serif;
+                left: 50%;
+                margin: -14em 0 0 -40ex;
+                padding: 1ex;
+                position: absolute;
+                top: 50%;
+                width: 80ex;
+                border-radius: 5px;
+            }
 
-        path {
-            color-rendering: auto;
-            color: #000000;
-            isolation: auto;
-            mix-blend-mode: normal;
-            shape-rendering: auto;
-            solid-color: #000000;
-            image-rendering: auto;
-            transition: fill 5s ease-out 0s;
-        }
+            path {
+                color-rendering: auto;
+                color: #000000;
+                isolation: auto;
+                mix-blend-mode: normal;
+                shape-rendering: auto;
+                solid-color: #000000;
+                image-rendering: auto;
+                transition: fill 5s ease-out 0s;
+            }
 
-        .hover {
-            fill: white;
-            transition: none;
-        }
+            .hover {
+                fill: white;
+                transition: none;
+            }
 
-    </style>
+        </style>
+
+    </head>
 
     <body>
 
@@ -52,7 +54,7 @@
 
                 <div class = "col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
 
-                    <h1 class = "login-header text-center">{{ .Title }}</h1>
+                    <h1 class = "login-header text-center">{{ .MainTitle }}</h1>
 
                 </div>
 
@@ -62,12 +64,12 @@
 
                 <div class = "col-lg-8 col-lg-offset-2">
 
-                    <form action = "/login" method = "POST" class = "form-horizontal">
+                    <form action = "/" method = "POST" class = "form-horizontal">
 
                         <div class = "form-group">
 
-                            {{ with .LoginData.Errors.Mail }}
-                            <div class = "alert alert-danger">{{ . }}</div>
+                            {{ range $key, $value := .Errors }}
+                            <div class = "alert alert-danger">{{ $value }}: <b>{{ $key }}</b></div>
                             {{ end }}
 
                             <label for = "inputEmail" class = "col-lg-2 control-label">Mail</label>
@@ -81,10 +83,6 @@
                         </div>
 
                         <div class = "form-group">
-
-                            {{ with .LoginData.Errors.Password }}
-                            <div class = "alert alert-danger">{{ . }}</div>
-                            {{ end }}
 
                             <label for = "inputPassword" class = "col-lg-2 control-label">Password</label>
 

@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator"
 	"github.com/howeyc/gopass"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
@@ -30,6 +31,7 @@ type App struct {
 	HashCost    int
 	Router      *gin.Engine
 	DB          *gorm.DB
+	Validator   *validator.Validate
 }
 
 // DefineRoutes registers all frontend endpoints.
@@ -38,7 +40,7 @@ func (app *App) DefineRoutes() {
 
 	// Route 'index'.
 	app.Router.GET("/", app.Index)
-	app.Router.POST("/login", app.Login)
+	app.Router.POST("/", app.Login)
 	app.Router.GET("/logout", app.Logout)
 
 	// Route 'list'.
@@ -119,6 +121,10 @@ func InitApp() *App {
 
 	// Append database connection.
 	app.DB = db.InitDB()
+
+	// Initialize the validator instance to validate fields with tag 'validate'
+	validatorConfig := &validator.Config{TagName: "validate"}
+	app.Validator = validator.New(validatorConfig)
 
 	// Register frontend routes.
 	app.DefineRoutes()
