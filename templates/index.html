@@ -68,6 +68,9 @@
 
                         <div class = "form-group">
 
+                            {{ with .FatalError }}
+                            <div class = "alert alert-danger"><b>{{ . }}</b></div>
+                            {{ end }}
                             {{ range $key, $value := .Errors }}
                             <div class = "alert alert-danger">{{ $value }}: <b>{{ $key }}</b></div>
                             {{ end }}

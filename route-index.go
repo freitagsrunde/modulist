@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
-
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/numbleroot/modulist/db"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Structs
@@ -29,6 +29,8 @@ func (app *App) Index(c *gin.Context) {
 		"PageTitle": "Willkommen bei MODULIST",
 		"MainTitle": "Willkommen bei MODULIST",
 	})
+
+	return
 }
 
 // Login provides all necessary functionality
@@ -42,7 +44,14 @@ func (app *App) Login(c *gin.Context) {
 
 	err := c.BindWith(&Payload, binding.FormPost)
 	if err != nil {
-		log.Fatal("WHAT")
+
+		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+			"PageTitle":  "Willkommen bei MODULIST",
+			"MainTitle":  "Willkommen bei MODULIST",
+			"FatalError": "Sent data could not be interpreted. Please try again.",
+		})
+
+		return
 	}
 
 	// Check sent content for validity.
@@ -55,6 +64,33 @@ func (app *App) Login(c *gin.Context) {
 			"MainTitle": "Willkommen bei MODULIST",
 			"Errors":    ErrorDesc,
 		})
+
+		return
+	}
+
+	// Data is valid, try to locate user in database.
+	var User db.User
+	app.DB.First(&User, "\"mail\" = ?", Payload.Mail)
+
+	// Check if user exists.
+	if User.ID == "" {
+
+		// TODO: Signal error.
+	}
+
+	// Compare password hash from database with possible plaintext
+	// password from submitted login form. Compares in constant time.
+	err = bcrypt.CompareHashAndPassword([]byte(User.PasswordHash), []byte(Payload.Password))
+	if err != nil {
+
+		// Signal client that an error occured.
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"PageTitle":  "Willkommen bei MODULIST",
+			"MainTitle":  "Willkommen bei MODULIST",
+			"FatalError": "Mail and/or password is wrong.",
+		})
+
+		return
 	}
 }
 
