@@ -23,7 +23,7 @@ type LoginPayload struct {
 func (app *App) Index(c *gin.Context) {
 
 	// Check if user is already logged in.
-	_, err := app.Authorize(c.Request)
+	_, err := app.Authorize(c.Request, db.PRIVILEGE_REVIEWER)
 	if err == nil {
 		c.Redirect(http.StatusFound, "/modules")
 
@@ -43,7 +43,7 @@ func (app *App) Index(c *gin.Context) {
 func (app *App) Login(c *gin.Context) {
 
 	// Check if user is already logged in.
-	_, err := app.Authorize(c.Request)
+	_, err := app.Authorize(c.Request, db.PRIVILEGE_REVIEWER)
 	if err == nil {
 		c.Redirect(http.StatusFound, "/modules")
 
@@ -110,7 +110,7 @@ func (app *App) Login(c *gin.Context) {
 func (app *App) Logout(c *gin.Context) {
 
 	// Check if user is authorized.
-	_, err := app.Authorize(c.Request)
+	_, err := app.Authorize(c.Request, db.PRIVILEGE_REVIEWER)
 	if err != nil {
 		c.Redirect(http.StatusFound, "/")
 

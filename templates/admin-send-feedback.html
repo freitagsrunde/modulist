@@ -7,13 +7,13 @@
 
     <body>
 
-        {{template "navbar" .}}
+        {{ template "navbar" . }}
 
         <main class = "container-fluid">
 
             <div class = "row">
 
-              <h2>Feedback versenden</h2>
+                <h2>Feedback versenden</h2>
 
             </div>
 
@@ -25,22 +25,38 @@
             </div>
             {{ end }}
 
-            <div class="row">
-              <div class="col-md-6" style="margin-bottom: 20px;">
-                <h3>E-Mail Header</h3>
-                <div class="alert alert-dismissible alert-success" style="display: none;" id="mailheader-success"><button type="button" class="close" data-dismiss="alert">x</button><strong>Gespeichert!</strong> Der Mailtext wurde erfolgreich gespeichert!</div>
-                <textarea class="form-control" id="mail-header" rows="7">{{ .MailHeader }}</textarea><br>
-                <button class="btn btn-primary" onclick="saveMailHeader();">Speichern</button>
-                <br>
-              </div>
+            <div class = "row">
 
-              <div class="col-md-6">
-                <h3>E-Mail Footer</h3>
-                <div class="alert alert-dismissible alert-success" style="display: none;" id="mailfooter-success"><button type="button" class="close" data-dismiss="alert">x</button><strong>Gespeichert!</strong> Der Mailtext wurde erfolgreich gespeichert!</div>
-                <textarea class="form-control" id="mail-footer" rows="7">{{ .MailFooter }}</textarea><br>
-                <button class="btn btn-primary" onclick="saveMailFooter();">Speichern</button>
-                <br>
-              </div>
+                <div class = "col-md-6" style = "margin-bottom: 20px;">
+
+                    <h3>E-Mail Header</h3>
+
+                    <div class = "alert alert-dismissible alert-success" style = "display: none;" id = "mailheader-success">
+                        <button type = "button" class = "close" data-dismiss = "alert">x</button>
+                        <strong>Gespeichert!</strong> Der Mailtext wurde erfolgreich gespeichert!
+                    </div>
+
+                    <textarea class = "form-control" id = "mail-header" rows = "7">{{ .MailHeader }}</textarea>
+
+                    <button class = "btn btn-primary" onclick = "saveMailHeader();">Speichern</button>
+
+                </div>
+
+                <div class = "col-md-6">
+
+                    <h3>E-Mail Footer</h3>
+
+                    <div class = "alert alert-dismissible alert-success" style = "display: none;" id = "mailfooter-success">
+                        <button type = "button" class = "close" data-dismiss = "alert">x</button>
+                        <strong>Gespeichert!</strong> Der Mailtext wurde erfolgreich gespeichert!
+                    </div>
+
+                    <textarea class = "form-control" id = "mail-footer" rows = "7">{{ .MailFooter }}</textarea>
+
+                    <button class = "btn btn-primary" onclick = "saveMailFooter();">Speichern</button>
+
+                </div>
+
             </div>
 
             <div class = "row">

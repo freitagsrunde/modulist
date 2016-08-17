@@ -7,27 +7,27 @@
 
     <body>
 
-        {{template "navbar" .}}
+        {{ template "navbar" . }}
 
         <main class = "container-fluid">
 
             <div class = "row">
 
-              <h2>Nutzerverwaltung</h2>
+                <h2>Nutzerverwaltung</h2>
 
             </div>
 
             {{ with .Error }}
             <div class = "row alert alert-dismissible alert-danger">
 
-              <button type="button" class="close" data-dismiss="alert">×</button>
-              <strong>Konnte Nuter nicht speichern!</strong><br>
+                <button type = "button" class = "close" data-dismiss = "alert">×</button>
+                <strong>Konnte Nuter nicht speichern!</strong><br>
 
-              <ul>
-              {{ range . }}
+                <ul>
+                {{ range . }}
                 <li>{{ . }}</li>
-              {{ end }}
-              </ul>
+                {{ end }}
+                </ul>
 
             </div>
             {{ end }}
@@ -35,84 +35,110 @@
             {{ with .NewPassword }}
             <div class = "row alert alert-dismissible alert-success">
 
-              <button type = "button" class = "close" data-dismiss = "alert">×</button>
-              <strong>Nutzer wurde gespeichert!</strong><br />
-              Das temporäre Passwort ist: <i>{{ . }}</i>
+                <button type = "button" class = "close" data-dismiss = "alert">×</button>
+                <strong>Nutzer wurde gespeichert!</strong><br />
+                Das temporäre Passwort ist: <i>{{ . }}</i>
 
             </div>
             {{ end }}
 
             <div class = "row">
 
-              <div class = "col-md-8">
+                <div class = "col-md-8">
 
-                <legend>Alle Nutzer</legend>
-                <table class="table table-hover table-striped">
-                  <tr>
-                    <th>Name</th>
-                    <th>E-Mail</th>
-                    <th>Statusgruppe</th>
-                    <th>Admin</th>
-                    <th>Account Erstellt</th>
-                    <th>Letztes Update</th>
-                    <th>Delete</th>
-                  </tr>
+                    <legend>Alle Nutzer</legend>
 
-                  {{ range .Users }}
-                  <tr>
-                    <td>{{ .Name }}</td>
-                    <td>{{ .Mail }}</td>
-                    <td>{{ .StatusGroup }}</td>
-                    <td>{{ .Admin }}</td>
-                    <td>{{ .CreatedAt }}</td>
-                    <td>{{ .UpdatedAt }}</td>
-                    <td><a href="/admin/users/delete/{{ .ID }}"><span class="glyphicon glyphicon-trash"></span></a></td>
-                  </tr>
-                  {{ end }}
+                    <table class = "table table-hover table-striped">
 
-                </table>
-              </div>
+                        <tr>
+                            <th>Name</th>
+                            <th>E-Mail</th>
+                            <th>Statusgruppe</th>
+                            <th>Admin</th>
+                            <th>Account Erstellt</th>
+                            <th>Letztes Update</th>
+                            <th>Delete</th>
+                        </tr>
 
-              <div class="col-md-4">
-                <form action="/admin/users" method="post" class="form-horizontal">
-                  <legend>Neuer Nutzer</legend>
-                  <div class="form-group">
-                    <label for="inputName" class="col-lg-2 control-label">Name:</label>
-                    <div class="col-lg-10">
-                      <input type="text" class="form-control" name="inputName" placeholder="Name">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="inputMail" class="col-lg-2 control-label">E-Mail:</label>
-                    <div class="col-lg-10">
-                      <input type="email" class="form-control" name="inputMail" placeholder="E-Mail">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="statusGroup" class="col-lg-2 control-label">Statusgruppe:</label>
-                    <div class="col-lg-10">
-                      <select class="form-control" name="statusGroup">
-                        <option>Studi</option>
-                        <option>WiMi</option>
-                        <option>Prof</option>
-                        <option>Anderes</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="checkbox col-lg-10 col-lg-offset-2">
-                      <label>
-                        <input name="isAdmin" type="checkbox"> Admin
-                      </label>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-lg-2 col-lg-offset-9">
-                      <button type="submit" class="btn btn-success">Erstellen</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
+                        {{ range .Users }}
+                        <tr>
+                            <td>{{ .Name }}</td>
+                            <td>{{ .Mail }}</td>
+                            <td>{{ .StatusGroup }}</td>
+                            <td>{{ .Admin }}</td>
+                            <td>{{ .CreatedAt }}</td>
+                            <td>{{ .UpdatedAt }}</td>
+                            <td><a href = "/admin/users/delete/{{ .ID }}"><span class = "glyphicon glyphicon-trash"></span></a></td>
+                        </tr>
+                        {{ end }}
+
+                    </table>
+
+                </div>
+
+                <div class = "col-md-4">
+
+                    <form action = "/admin/users" method = "POST" class = "form-horizontal">
+
+                        <legend>Neuer Nutzer</legend>
+
+                        <div class = "form-group">
+
+                            <label for = "inputName" class = "col-lg-2 control-label">Name:</label>
+
+                            <div class = "col-lg-10">
+                                <input type = "text" class = "form-control" name = "inputName" placeholder = "Name" />
+                            </div>
+
+                        </div>
+
+                        <div class = "form-group">
+
+                            <label for = "inputMail" class = "col-lg-2 control-label">E-Mail:</label>
+
+                            <div class = "col-lg-10">
+                                <input type = "email" class = "form-control" name = "inputMail" placeholder = "E-Mail" />
+                            </div>
+
+                        </div>
+
+                        <div class = "form-group">
+
+                            <label for = "statusGroup" class = "col-lg-2 control-label">Statusgruppe:</label>
+
+                            <div class = "col-lg-10">
+                                <select class = "form-control" name = "statusGroup">
+                                    <option>Studi</option>
+                                    <option>WiMi</option>
+                                    <option>Prof</option>
+                                    <option>Anderes</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class = "form-group">
+
+                            <div class = "checkbox col-lg-10 col-lg-offset-2">
+                                <label>
+                                    <input name = "isAdmin" type = "checkbox"> Admin
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class = "form-group">
+
+                            <div class = "col-lg-2 col-lg-offset-9">
+                                <button type = "submit" class = "btn btn-success">Erstellen</button>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
             </div>
 
         </main>

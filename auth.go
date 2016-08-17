@@ -49,8 +49,10 @@ func (app *App) CreateSession(c *gin.Context, User db.User) {
 
 // Authorize takes a supplied request, extracts the to-
 // be-included JWT out of the set cookies and validates
-// it on various aspects.
-func (app *App) Authorize(Request *http.Request) (*db.User, error) {
+// it on various aspects. Additionally, it is checked that
+// the user has at least the required minimum privilege
+// specified by the calling handler.
+func (app *App) Authorize(Request *http.Request, MinimumPrivilege int) (*db.User, error) {
 
 	// Extract cookie with token from request.
 	cookie, err := Request.Cookie("Token")
@@ -99,6 +101,11 @@ func (app *App) Authorize(Request *http.Request) (*db.User, error) {
 
 	var User db.User
 	app.DB.First(&User, "\"mail\" = ?", userMail)
+
+	// Check if logged-in user is allowed to view page.
+	if User.Privileges > MinimumPrivilege {
+		return nil, errors.New("You do not have sufficient privileges.")
+	}
 
 	// We found the logged-in user.
 	return &User, nil

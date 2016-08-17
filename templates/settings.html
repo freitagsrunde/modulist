@@ -7,60 +7,85 @@
 
     <body>
 
-        {{template "navbar" .}}
+        {{ template "navbar" . }}
 
         <main class = "container-fluid">
 
             <div class = "row">
 
-              <h2>Einstellungen</h2>
+                <h2>Einstellungen</h2>
 
             </div>
 
             {{ with .Error }}
-            <div class="row alert alert-dismissible alert-danger">
-              <button type="button" class="close" data-dismiss="alert">×</button>
-              <strong>Konnte das Passwort nicht ändern!</strong><br>
-              {{ . }}
+            <div class = "row alert alert-dismissible alert-danger">
+
+                <button type = "button" class = "close" data-dismiss = "alert">×</button>
+                <strong>Konnte das Passwort nicht ändern!</strong><br>
+                {{ . }}
+
             </div>
             {{ end }}
 
             {{ with .Success }}
-            <div class="row alert alert-dismissible alert-success">
-              <button type="button" class="close" data-dismiss="alert">×</button>
-              <strong>Passwort wurde geändert</strong><br>
+            <div class = "row alert alert-dismissible alert-success">
+
+                <button type = "button" class = "close" data-dismiss = "alert">×</button>
+                <strong>Passwort wurde geändert</strong><br>
+
             </div>
             {{ end }}
 
-            <div class="row">
-              <div class="col-md-6">
-                <form action="/settings" method="post" class="form-horizontal">
-                  <legend>Passwort ändern</legend>
-                  <div class="form-group">
-                    <label for="oldPassword" class="col-lg-2 control-label">Altes Passwort:</label>
-                    <div class="col-lg-10">
-                      <input type="password" class="form-control" name="oldPassword" placeholder="Altes Passwort">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="newPassword" class="col-lg-2 control-label">Neues Passwort:</label>
-                    <div class="col-lg-10">
-                      <input type="password" class="form-control" name="newPassword" placeholder="Neues Passwort">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="repeatNewPassword" class="col-lg-2 control-label">Neues Passwort wiederholen:</label>
-                    <div class="col-lg-10">
-                      <input type="password" class="form-control" name="repeatNewPassword" placeholder="Neues Passwort">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-lg-2 col-lg-offset-9">
-                      <button type="submit" class="btn btn-success">Ändern</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
+            <div class = "row" style = "margin-top: 20px;">
+
+                <div class = "col-md-6">
+
+                    <form action = "/settings" method = "POST" class = "form-horizontal">
+
+                        <legend>Passwort ändern</legend>
+
+                        <div class = "form-group">
+
+                            <label for = "oldPassword" class = "col-lg-2 control-label">Altes Passwort:</label>
+
+                            <div class = "col-lg-10">
+                                <input type = "password" class = "form-control" name = "oldPassword" placeholder = "Altes Passwort">
+                            </div>
+
+                        </div>
+
+                        <div class = "form-group">
+
+                            <label for = "newPassword" class = "col-lg-2 control-label">Neues Passwort:</label>
+
+                            <div class = "col-lg-10">
+                                <input type = "password" class = "form-control" name = "newPassword" placeholder = "Neues Passwort">
+                            </div>
+
+                        </div>
+
+                        <div class = "form-group">
+
+                            <label for = "repeatNewPassword" class = "col-lg-2 control-label">Neues Passwort wiederholen:</label>
+
+                            <div class = "col-lg-10">
+                                <input type = "password" class = "form-control" name = "repeatNewPassword" placeholder = "Neues Passwort">
+                            </div>
+
+                        </div>
+
+                        <div class = "form-group">
+
+                            <div class = "col-lg-2 col-lg-offset-9">
+                                <button type = "submit" class = "btn btn-success">Ändern</button>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
             </div>
 
         </main>

@@ -3,6 +3,10 @@ package db
 // Constants
 
 const (
+	// Privileges have to be kept monotonic.
+	// That means, a user with a lower integer
+	// privilege value will also have all privileges
+	// numerically greater than that value.
 	PRIVILEGE_ADMIN = iota
 	PRIVILEGE_REVIEWER
 )
