@@ -104,8 +104,23 @@ func (app *App) Login(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/modules")
 }
 
+// Logout destroys the user's session by storing
+// garbage in the current session cookie and instructing
+// the browser to delete that cookie.
 func (app *App) Logout(c *gin.Context) {
 
-	// Set token cookie content to garbage.
-	// TODO
+	// Check if user is authorized.
+	_, err := app.Authorize(c.Request)
+	if err != nil {
+		c.Redirect(http.StatusFound, "/")
+
+		return
+	}
+
+	// Set token cookie content to garbage and
+	// expiration date to a date in the past.
+	c.SetCookie("Token", "", -1, "", "", false, true)
+
+	// Redirect back to index page.
+	c.Redirect(http.StatusFound, "/")
 }

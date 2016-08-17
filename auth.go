@@ -72,9 +72,13 @@ func (app *App) Authorize(Request *http.Request) (*db.User, error) {
 		return []byte(os.Getenv("APP_JWT_SIGNING_SECRET")), nil
 	})
 
+	// Check for parsing errors.
+	if err != nil {
+		return nil, errors.New("Authorization not present or correct. Please log in.")
+	}
+
 	// Check if JWT is valid.
-	if (token.Valid != true) || (err != nil) {
-		// Something went wrong.
+	if token.Valid != true {
 		return nil, errors.New("Authorization not present or correct. Please log in.")
 	}
 
