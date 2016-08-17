@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
+	"github.com/freitagsrunde/modulist/db"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/numbleroot/modulist/db"
 	"golang.org/x/crypto/bcrypt"
 )
 

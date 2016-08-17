@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/numbleroot/modulist/db"
+	"github.com/freitagsrunde/modulist/db"
 )
 
 // Functions

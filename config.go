@@ -8,12 +8,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/freitagsrunde/modulist/db"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 	"github.com/howeyc/gopass"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
-	"github.com/numbleroot/modulist/db"
 	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
