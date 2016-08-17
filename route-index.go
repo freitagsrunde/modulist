@@ -23,7 +23,12 @@ type LoginPayload struct {
 func (app *App) Index(c *gin.Context) {
 
 	// Check if user is already logged in.
-	// TODO: Do this.
+	_, err := app.Authorize(c.Request)
+	if err == nil {
+		c.Redirect(http.StatusFound, "/modules")
+
+		return
+	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"PageTitle": "Willkommen bei MODULIST",
@@ -38,11 +43,16 @@ func (app *App) Index(c *gin.Context) {
 func (app *App) Login(c *gin.Context) {
 
 	// Check if user is already logged in.
-	// TODO: Do this.
+	_, err := app.Authorize(c.Request)
+	if err == nil {
+		c.Redirect(http.StatusFound, "/modules")
+
+		return
+	}
 
 	var Payload LoginPayload
 
-	err := c.BindWith(&Payload, binding.FormPost)
+	err = c.BindWith(&Payload, binding.FormPost)
 	if err != nil {
 
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
@@ -87,15 +97,15 @@ func (app *App) Login(c *gin.Context) {
 		return
 	}
 
-	// User exists and supplied correct login data,
-	// generate JSON Web Token (JWT).
-	jwt := app.CreateJWT(&User)
-
-	// TODO: Set 'secure' to true.
-	c.SetCookie("Bearer", jwt, int(app.JWTValidFor.Seconds()), "", "", false, true)
+	// Create a JWT and store it as a cookie.
+	app.CreateSession(c, User)
 
 	// Redirect to first authorized page.
 	c.Redirect(http.StatusFound, "/modules")
 }
 
-func (app *App) Logout(c *gin.Context) {}
+func (app *App) Logout(c *gin.Context) {
+
+	// Set token cookie content to garbage.
+	// TODO
+}
