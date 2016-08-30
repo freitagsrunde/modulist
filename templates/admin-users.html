@@ -9,9 +9,9 @@
 
         {{ template "navbar" . }}
 
-        <main class = "container-fluid">
+        <main class = "container">
 
-            <div class = "row">
+            <div class = "row headline">
 
                 <h2>Nutzerverwaltung</h2>
 
@@ -44,100 +44,96 @@
 
             <div class = "row">
 
-                <div class = "col-md-8">
+                <form action = "/admin/users" method = "POST" class = "form-horizontal">
 
-                    <legend>Alle Nutzer</legend>
+                    <legend>Neuer Nutzer</legend>
 
-                    <table class = "table table-hover table-striped">
+                    <div class = "form-group">
 
-                        <tr>
-                            <th>Name</th>
-                            <th>E-Mail</th>
-                            <th>Statusgruppe</th>
-                            <th>Admin</th>
-                            <th>Account Erstellt</th>
-                            <th>Letztes Update</th>
-                            <th>Delete</th>
-                        </tr>
+                        <label for = "inputName" class = "col-lg-2 control-label">Name:</label>
 
-                        {{ range .Users }}
-                        <tr>
-                            <td>{{ .Name }}</td>
-                            <td>{{ .Mail }}</td>
-                            <td>{{ .StatusGroup }}</td>
-                            <td>{{ .Admin }}</td>
-                            <td>{{ .CreatedAt }}</td>
-                            <td>{{ .UpdatedAt }}</td>
-                            <td><a href = "/admin/users/delete/{{ .ID }}"><span class = "glyphicon glyphicon-trash"></span></a></td>
-                        </tr>
-                        {{ end }}
-
-                    </table>
-
-                </div>
-
-                <div class = "col-md-4">
-
-                    <form action = "/admin/users" method = "POST" class = "form-horizontal">
-
-                        <legend>Neuer Nutzer</legend>
-
-                        <div class = "form-group">
-
-                            <label for = "inputName" class = "col-lg-2 control-label">Name:</label>
-
-                            <div class = "col-lg-10">
-                                <input type = "text" class = "form-control" name = "inputName" placeholder = "Name" />
-                            </div>
-
+                        <div class = "col-lg-10">
+                            <input type = "text" class = "form-control" name = "inputName" placeholder = "Name" />
                         </div>
 
-                        <div class = "form-group">
+                    </div>
 
-                            <label for = "inputMail" class = "col-lg-2 control-label">E-Mail:</label>
+                    <div class = "form-group">
 
-                            <div class = "col-lg-10">
-                                <input type = "email" class = "form-control" name = "inputMail" placeholder = "E-Mail" />
-                            </div>
+                        <label for = "inputMail" class = "col-lg-2 control-label">E-Mail:</label>
 
+                        <div class = "col-lg-10">
+                            <input type = "email" class = "form-control" name = "inputMail" placeholder = "E-Mail" />
                         </div>
 
-                        <div class = "form-group">
+                    </div>
 
-                            <label for = "statusGroup" class = "col-lg-2 control-label">Statusgruppe:</label>
+                    <div class = "form-group">
 
-                            <div class = "col-lg-10">
-                                <select class = "form-control" name = "statusGroup">
-                                    <option>Studi</option>
-                                    <option>WiMi</option>
-                                    <option>Prof</option>
-                                    <option>Anderes</option>
-                                </select>
-                            </div>
+                        <label for = "statusGroup" class = "col-lg-2 control-label">Statusgruppe:</label>
 
+                        <div class = "col-lg-10">
+                            <select class = "form-control" name = "statusGroup">
+                                <option>Studi</option>
+                                <option>WiMi</option>
+                                <option>Prof</option>
+                                <option>Anderes</option>
+                            </select>
                         </div>
 
-                        <div class = "form-group">
+                    </div>
 
-                            <div class = "checkbox col-lg-10 col-lg-offset-2">
-                                <label>
-                                    <input name = "isAdmin" type = "checkbox"> Admin
-                                </label>
-                            </div>
+                    <div class = "form-group">
 
+                        <div class = "checkbox col-lg-10 col-lg-offset-2">
+                            <label>
+                                <input name = "isAdmin" type = "checkbox"> Admin
+                            </label>
                         </div>
 
-                        <div class = "form-group">
+                    </div>
 
-                            <div class = "col-lg-2 col-lg-offset-9">
-                                <button type = "submit" class = "btn btn-success">Erstellen</button>
-                            </div>
+                    <div class = "form-group">
 
+                        <div class = "col-lg-2 col-lg-offset-9">
+                            <button type = "submit" class = "btn btn-success">Erstellen</button>
                         </div>
 
-                    </form>
+                    </div>
 
-                </div>
+                </form>
+
+            </div>
+
+            <div class = "row">
+
+                <legend>Alle Nutzer</legend>
+
+                <table class = "table table-hover table-striped">
+
+                    <tr>
+                        <th>Name</th>
+                        <th>E-Mail</th>
+                        <th>Statusgruppe</th>
+                        <th>Admin</th>
+                        <th>Account Erstellt</th>
+                        <th>Letztes Update</th>
+                        <th>Delete</th>
+                    </tr>
+
+                    {{ range .Users }}
+                    <tr>
+                        <td>{{ .Name }}</td>
+                        <td>{{ .Mail }}</td>
+                        <td>{{ .StatusGroup }}</td>
+                        <td>{{ .Admin }}</td>
+                        <td>{{ .CreatedAt }}</td>
+                        <td>{{ .UpdatedAt }}</td>
+                        <td><a href = "/admin/users/delete/{{ .ID }}"><span class = "glyphicon glyphicon-trash"></span></a></td>
+                    </tr>
+                    {{ end }}
+
+                </table>
 
             </div>
 

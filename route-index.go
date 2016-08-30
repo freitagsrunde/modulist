@@ -58,7 +58,7 @@ func (app *App) Login(c *gin.Context) {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
 			"PageTitle":  "Willkommen bei MODULIST",
 			"MainTitle":  "Willkommen bei MODULIST",
-			"FatalError": "Sent data could not be interpreted. Please try again.",
+			"FatalError": "Gesendete Logindaten konnten nicht verarbeitet werden. Bitte erneut versuchen.",
 		})
 
 		return
@@ -91,7 +91,7 @@ func (app *App) Login(c *gin.Context) {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
 			"PageTitle":  "Willkommen bei MODULIST",
 			"MainTitle":  "Willkommen bei MODULIST",
-			"FatalError": "Mail and/or password wrong.",
+			"FatalError": "Mail und/oder Passwort falsch.",
 		})
 
 		return
