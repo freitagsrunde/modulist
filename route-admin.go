@@ -22,14 +22,14 @@ func (app *App) ListUsers(c *gin.Context) {
 	// Update expiration time of session.
 	app.CreateSession(c, *User)
 
-	// TODO: Correct admin list users page behaviour.
+	// Fetch all users registered in database.
+	var Users []db.User
+	app.DB.Find(&Users)
 
 	c.HTML(http.StatusOK, "admin-users.html", gin.H{
-		"PageTitle":   "Admin - Nutzerverwaltung",
-		"User":        User,
-		"Users":       []db.User{},
-		"Error":       nil,
-		"NewPassword": "",
+		"PageTitle": "Admin - Nutzerverwaltung",
+		"User":      User,
+		"Users":     Users,
 	})
 }
 

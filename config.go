@@ -176,6 +176,10 @@ func InitApp() *App {
 		// Set mail verification flag of this user to false, initially.
 		NewAdmin.MailVerified = false
 
+		// Ask for status group of new admin.
+		fmt.Printf("Status group (0 for Prof, 1 for WiMi, 2 for Studi, 3 for other): ")
+		fmt.Scanln(&NewAdmin.StatusGroup)
+
 		// Ask for password.
 		fmt.Printf("Password: ")
 		pwd, err := gopass.GetPasswd()
@@ -200,6 +204,8 @@ func InitApp() *App {
 
 		// Set account to enabled, initially.
 		NewAdmin.Enabled = true
+
+		fmt.Printf("\n\nNEW USER: %v\n\n", NewAdmin)
 
 		// Save new admin to database.
 		app.DB.Create(&NewAdmin)
