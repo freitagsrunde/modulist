@@ -22,12 +22,17 @@ func (app *App) ListModules(c *gin.Context) {
 	// Update expiration time of session.
 	app.CreateSession(c, *User)
 
+	// Load all modules from database.
+	var Modules []db.Module
+	firstLetter := "A"
+	app.DB.Where("\"title\" LIKE ?", (firstLetter + "%")).Order("lower(\"title\") asc").Find(&Modules)
+
 	c.HTML(http.StatusOK, "modules-list.html", gin.H{
 		"PageTitle":   "Übersicht der Modulbeschreibungen",
 		"User":        User,
 		"FirstLetter": "A",
 		"Alphabet":    map[string]bool{"A": true, "B": true, "C": true, "D": true, "E": true, "F": true, "G": true, "H": true, "I": true, "J": true, "K": true, "L": true, "M": true, "N": true, "O": true, "P": true, "Q": true, "R": true, "S": true, "T": true, "U": true, "V": true, "W": true, "X": true, "Y": true, "Z": true},
-		"ModuleList":  struct{}{},
+		"Modules":     Modules,
 	})
 }
 

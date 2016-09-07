@@ -151,7 +151,7 @@ func InitApp() *App {
 
 		// Transfer modules from SQLite database specified
 		// in .env file to main database.
-		// TODO: do that.
+		db.TransferModules(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
 
 		// Default admin user creation.
 		fmt.Printf("\n========== Begin initializing MODULIST ==========\n\nCreate default admin user.\n")

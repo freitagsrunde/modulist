@@ -102,30 +102,15 @@
 
                     <tbody>
 
-                {{ with .ModuleList }}
+                {{ with .Modules }}
                     {{ range . }}
                         <tr id = "module-{{.ID}}">
-                            <td>{{ .ModulID }}</td>
+                            <td>{{ .ModuleID }}</td>
                             <td>{{ .Version }}</td>
                             <td><a href = "/review/{{.ID}}">{{ .Title }}</a></td>
-                            <td>{{ .LP }}</td>
-                            <td style = "text-align: right;">
-                            {{ $fbcount := .Feedback | len }}
-                            {{ if eq $fbcount 0 }}
-                              <span class = "label label-default">{{ $fbcount }}</span>
-                            {{ else if lt $fbcount 3 }}
-                              <span class = "label label-primary">{{ $fbcount }}</span>
-                            {{ else }}
-                              <span class = "label label-success">{{ $fbcount }}</span>
-                            {{ end }}
-                            </td>
-                            <td>
-                              {{ if .Done }}
-                                <a style = "cursor: pointer;" onclick = "checkModule({{ .ID }})"><span class = "glyphicon glyphicon-check"></span></a>
-                              {{ else }}
-                                <a style = "cursor: pointer;" onclick = "checkModule({{ .ID }})"><span class = "glyphicon glyphicon-unchecked"></span></a>
-                              {{ end }}
-                            </td>
+                            <td>{{ .ECTS }}</td>
+                            <td style = "text-align: right;">A</td>
+                            <td>B</td>
                         </tr>
                     {{ end }}
                 {{ end }}

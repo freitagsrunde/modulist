@@ -10,6 +10,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 // Functions
@@ -63,7 +64,35 @@ func SetUpTables(db *gorm.DB) {
 
 	// Delete all tables corresponding to models if they exist.
 	db.DropTableIfExists(&User{})
+	db.DropTableIfExists(&Module{})
 
 	// Create new ones for all models.
 	db.CreateTable(&User{})
+	db.CreateTable(&Module{})
+}
+
+// TransferModules connects to the provided SQLite database containing
+// the modules and exports them into the services's main database.
+func TransferModules(db *gorm.DB, modulesDBPath string) {
+
+	// Connect to SQLite database.
+	modulesDB, err := gorm.Open("sqlite3", modulesDBPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Select all MTS modules from SQLite database.
+	var sqliteModules []SQLiteModule
+	modulesDB.Find(&sqliteModules)
+
+	for _, sqliteModule := range sqliteModules {
+
+		// Convert each module from SQLite database to
+		// module made to be stored in main database.
+		var module Module
+		module = sqliteModule.ToModule()
+
+		// Save it to main database.
+		db.Create(&module)
+	}
 }
