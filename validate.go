@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/leebenson/conform"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -18,8 +16,6 @@ func (app *App) ConformAndValidate(Payload interface{}) map[string]string {
 	errs := app.Validator.Struct(Payload)
 
 	if errs != nil {
-
-		log.Println("[VALIDATE] ", errs)
 
 		errResp := make(map[string]string)
 
