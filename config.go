@@ -10,12 +10,12 @@ import (
 
 	"github.com/freitagsrunde/modulist/db"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator"
 	"github.com/howeyc/gopass"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 // Structs
@@ -133,9 +133,8 @@ func InitApp() *App {
 	// Append database connection.
 	app.DB = db.InitDB()
 
-	// Initialize the validator instance to validate fields with tag 'validate'
-	validatorConfig := &validator.Config{TagName: "validate"}
-	app.Validator = validator.New(validatorConfig)
+	// Initialize the validator instance to validate fields with tag 'validate'.
+	app.Validator = validator.New()
 
 	// Register frontend routes.
 	app.DefineRoutes()
