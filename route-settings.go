@@ -63,7 +63,7 @@ func (app *App) UpdateSettings(c *gin.Context) {
 	}
 
 	// Check sent content for validity.
-	ErrorDesc := app.ConformAndValidate(Payload)
+	ErrorDesc := app.ConformAndValidate(&Payload)
 	if ErrorDesc != nil {
 
 		// If payload did not pass, report errors to user.

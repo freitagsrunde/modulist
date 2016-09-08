@@ -14,13 +14,20 @@
 
             <div class = "row">
 
+                {{ with .FatalError }}
+                <div class = "alert alert-danger"><b>{{ . }}</b></div>
+                {{ end }}
+                {{ range $key, $value := .Errors }}
+                <div class = "alert alert-danger">{{ $value }}: <b>{{ $key }}</b></div>
+                {{ end }}
+
                 <div class = "col-lg-7 space-right">
 
-                    <form action = "/action" method = "GET" class = "form-horizontal">
+                    <form action = "/modules/search" method = "GET" class = "form-horizontal">
 
                         <div class = "input-group">
 
-                            <input type = "text" class = "form-control" placeholder = "Alle Modultitel durchsuchen..." />
+                            <input type = "text" name = "query" class = "form-control" placeholder = "Alle Modultitel durchsuchen..." />
 
                             <span class = "input-group-btn">
 
@@ -43,36 +50,42 @@
 
                     <ul class = "dropdown-menu" aria-labelledby = "firstLetterSelector">
                         <li><a href = "/modules">Anfangsbuchstabe A</a></li>
-                        <li><a href = "/modules/B">Anfangsbuchstabe B</a></li>
-                        <li><a href = "/modules/C">Anfangsbuchstabe C</a></li>
-                        <li><a href = "/modules/D">Anfangsbuchstabe D</a></li>
-                        <li><a href = "/modules/E">Anfangsbuchstabe E</a></li>
-                        <li><a href = "/modules/F">Anfangsbuchstabe F</a></li>
-                        <li><a href = "/modules/G">Anfangsbuchstabe G</a></li>
-                        <li><a href = "/modules/H">Anfangsbuchstabe H</a></li>
-                        <li><a href = "/modules/I">Anfangsbuchstabe I</a></li>
-                        <li><a href = "/modules/J">Anfangsbuchstabe J</a></li>
-                        <li><a href = "/modules/K">Anfangsbuchstabe K</a></li>
-                        <li><a href = "/modules/L">Anfangsbuchstabe L</a></li>
-                        <li><a href = "/modules/M">Anfangsbuchstabe M</a></li>
-                        <li><a href = "/modules/N">Anfangsbuchstabe N</a></li>
-                        <li><a href = "/modules/O">Anfangsbuchstabe O</a></li>
-                        <li><a href = "/modules/P">Anfangsbuchstabe P</a></li>
-                        <li><a href = "/modules/Q">Anfangsbuchstabe Q</a></li>
-                        <li><a href = "/modules/R">Anfangsbuchstabe R</a></li>
-                        <li><a href = "/modules/S">Anfangsbuchstabe S</a></li>
-                        <li><a href = "/modules/T">Anfangsbuchstabe T</a></li>
-                        <li><a href = "/modules/U">Anfangsbuchstabe U</a></li>
-                        <li><a href = "/modules/V">Anfangsbuchstabe V</a></li>
-                        <li><a href = "/modules/W">Anfangsbuchstabe W</a></li>
-                        <li><a href = "/modules/X">Anfangsbuchstabe X</a></li>
-                        <li><a href = "/modules/Y">Anfangsbuchstabe Y</a></li>
-                        <li><a href = "/modules/Z">Anfangsbuchstabe Z</a></li>
+                        <li><a href = "/modules/filter/B">Anfangsbuchstabe B</a></li>
+                        <li><a href = "/modules/filter/C">Anfangsbuchstabe C</a></li>
+                        <li><a href = "/modules/filter/D">Anfangsbuchstabe D</a></li>
+                        <li><a href = "/modules/filter/E">Anfangsbuchstabe E</a></li>
+                        <li><a href = "/modules/filter/F">Anfangsbuchstabe F</a></li>
+                        <li><a href = "/modules/filter/G">Anfangsbuchstabe G</a></li>
+                        <li><a href = "/modules/filter/H">Anfangsbuchstabe H</a></li>
+                        <li><a href = "/modules/filter/I">Anfangsbuchstabe I</a></li>
+                        <li><a href = "/modules/filter/J">Anfangsbuchstabe J</a></li>
+                        <li><a href = "/modules/filter/K">Anfangsbuchstabe K</a></li>
+                        <li><a href = "/modules/filter/L">Anfangsbuchstabe L</a></li>
+                        <li><a href = "/modules/filter/M">Anfangsbuchstabe M</a></li>
+                        <li><a href = "/modules/filter/N">Anfangsbuchstabe N</a></li>
+                        <li><a href = "/modules/filter/O">Anfangsbuchstabe O</a></li>
+                        <li><a href = "/modules/filter/P">Anfangsbuchstabe P</a></li>
+                        <li><a href = "/modules/filter/Q">Anfangsbuchstabe Q</a></li>
+                        <li><a href = "/modules/filter/R">Anfangsbuchstabe R</a></li>
+                        <li><a href = "/modules/filter/S">Anfangsbuchstabe S</a></li>
+                        <li><a href = "/modules/filter/T">Anfangsbuchstabe T</a></li>
+                        <li><a href = "/modules/filter/U">Anfangsbuchstabe U</a></li>
+                        <li><a href = "/modules/filter/V">Anfangsbuchstabe V</a></li>
+                        <li><a href = "/modules/filter/W">Anfangsbuchstabe W</a></li>
+                        <li><a href = "/modules/filter/X">Anfangsbuchstabe X</a></li>
+                        <li><a href = "/modules/filter/Y">Anfangsbuchstabe Y</a></li>
+                        <li><a href = "/modules/filter/Z">Anfangsbuchstabe Z</a></li>
                         <li role = "separator" class = "divider no-space"></li>
-                        <li><a href = "/modules/all">Zeige alle</a></li>
+                        <li><a href = "/modules/filter/all">Zeige alle</a></li>
                     </ul>
 
                 </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div style = "text-align: center;">Zeige <b>{{ len .Modules }}</b> Module an.</div>
 
             </div>
 

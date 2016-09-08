@@ -49,9 +49,9 @@ func (app *App) DefineRoutes() {
 
 	// Route 'list'.
 	app.Router.GET("/modules", app.ListModules)
-	app.Router.POST("/modules", app.FilterModules)
-	app.Router.GET("/modules/:firstLetter", app.FilterModulesByLetter)
-	app.Router.GET("/done/:id", app.MarkModuleDone)
+	app.Router.GET("/modules/search", app.SearchModules)
+	app.Router.GET("/modules/filter/:firstLetter", app.FilterModulesByLetter)
+	app.Router.GET("/modules/done/:id", app.MarkModuleDone)
 
 	// Route 'feedback'.
 	app.Router.GET("/review/:moduleID", app.ReviewModule)
