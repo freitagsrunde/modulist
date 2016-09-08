@@ -5,16 +5,16 @@ function checkModule(id) {
         if (data.Done !== undefined) {
 
             if (data.Done) {
-                $("#module-"+data.ID+" > td > a > span").removeClass("glyphicon-unchecked")
-                $("#module-"+data.ID+" > td > a > span").addClass("glyphicon-check")
+                $("#module-" + data.ID + " > td > a > span").removeClass("glyphicon-unchecked")
+                $("#module-" + data.ID + " > td > a > span").addClass("glyphicon-check")
             } else {
-                $("#module-"+data.ID+" > td > a > span").removeClass("glyphicon-check")
-                $("#module-"+data.ID+" > td > a > span").addClass("glyphicon-unchecked")
+                $("#module-" + data.ID + " > td > a > span").removeClass("glyphicon-check")
+                $("#module-" + data.ID + " > td > a > span").addClass("glyphicon-unchecked")
             }
 
             updateVisibility();
         }
-    })
+    });
 }
 
 function updateVisibility(fast) {
@@ -24,6 +24,7 @@ function updateVisibility(fast) {
     if ($("#modules-list-approved-checkbox")[0].checked) {
 
         for (var i = 1; i < rows.length; i++) {
+
             row = $($("table tr")[i])
 
             if (row.find("a span").hasClass("glyphicon-check")) {
@@ -36,10 +37,11 @@ function updateVisibility(fast) {
             }
         }
 
-        createCookie("hideDone", 1)
+        createCookie("hideDone", 1);
     } else {
 
         for (var i = 1; i < rows.length; i++) {
+
             row = $($("table tr")[i])
 
             if (fast) {
@@ -67,7 +69,7 @@ function feedbackCheck(id) {
                 $($("h2")[1]).next().find("a").text("Modul als fertig markieren")
             }
         }
-    })
+    });
 }
 
 function createCookie(name, value, days) {

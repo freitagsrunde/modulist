@@ -53,9 +53,6 @@ func (app *App) DefineRoutes() {
 	app.Router.GET("/modules/:firstLetter", app.FilterModulesByLetter)
 	app.Router.GET("/done/:id", app.MarkModuleDone)
 
-	// Route 'search'.
-	app.Router.GET("/search", app.Search)
-
 	// Route 'feedback'.
 	app.Router.GET("/review/:moduleID", app.ReviewModule)
 	app.Router.POST("/review/:moduleID/addFeedback/:category", app.AddFeedback)

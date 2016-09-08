@@ -44,7 +44,7 @@ type User struct {
 type Module struct {
 	ID                      string `gorm:"primary_key"`
 	Title                   string `gorm:"index;not null"`
-	TitleEnglish            string
+	TitleEnglish            string `gorm:"index"`
 	ECTS                    int
 	ModuleID                int `gorm:"not null"`
 	Version                 int `gorm:"not null"`

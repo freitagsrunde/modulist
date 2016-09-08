@@ -17,6 +17,8 @@ main.container-fluid { margin: 0 15px; }
     padding-left: 0;
 }
 
+.row > .space-right { padding-right: 15px; }
+
 .headline { margin-bottom: 25px; }
 
 .login-top-row { margin-top: 12%; }
@@ -25,13 +27,4 @@ main.container-fluid { margin: 0 15px; }
 
 #grayed-text { color: #999; }
 
-.modules-list-filter { padding: 0 }
-
-.modules-list-filter select { font-weight: 700; }
-
-.modules-list-approved {
-    padding: 0 20px 0 0;
-    text-align: right;
-}
-
-#modules-list-approved-checkbox { margin: 4px 0 0 3px; }
+.dropdown-menu .no-space { margin: 0; }
