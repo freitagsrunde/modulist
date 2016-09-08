@@ -64,10 +64,12 @@ func SetUpTables(db *gorm.DB) {
 
 	// Delete all tables corresponding to models if they exist.
 	db.DropTableIfExists(&User{})
+	db.DropTableIfExists(&PasswordLink{})
 	db.DropTableIfExists(&Module{})
 
 	// Create new ones for all models.
 	db.CreateTable(&User{})
+	db.CreateTable(&PasswordLink{})
 	db.CreateTable(&Module{})
 }
 

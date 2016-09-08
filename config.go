@@ -61,6 +61,8 @@ func (app *App) DefineRoutes() {
 	// Route 'settings'.
 	app.Router.GET("/settings", app.ListSettings)
 	app.Router.POST("/settings", app.UpdateSettings)
+	app.Router.GET("/settings/:secretToken", app.PasswordLinkView)
+	app.Router.POST("/settings/:secretToken", app.UsePasswordLink)
 
 	// Route 'admin'.
 	app.Router.GET("/admin/users", app.ListUsers)
@@ -200,8 +202,6 @@ func InitApp() *App {
 
 		// Set account to enabled, initially.
 		NewAdmin.Enabled = true
-
-		fmt.Printf("\n\nNEW USER: %v\n\n", NewAdmin)
 
 		// Save new admin to database.
 		app.DB.Create(&NewAdmin)

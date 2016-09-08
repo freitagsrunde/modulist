@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"crypto/rand"
 	"net/http"
@@ -118,7 +119,7 @@ func (app *App) CreateUser(c *gin.Context) {
 	_, err = rand.Read(randomBytes)
 	if err != nil {
 
-		log.Printf("[CreateUser] Generating random bytes went wrong: %s.\n", err.Error())
+		log.Printf("[CreateUser] Generating random bytes for temporary user password went wrong: %s.\n", err.Error())
 
 		app.DB.Find(&Users)
 
@@ -133,8 +134,10 @@ func (app *App) CreateUser(c *gin.Context) {
 		return
 	}
 
+	pwd := fmt.Sprintf("%x", randomBytes)
+
 	// Generate a secure bcrypt hash from generated random bytes.
-	hash, err := bcrypt.GenerateFromPassword(randomBytes, app.HashCost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), app.HashCost)
 	if err != nil {
 
 		log.Printf("[CreateUser] Creating bcrypt password hash went wrong: %s.\n", err.Error())
@@ -155,7 +158,40 @@ func (app *App) CreateUser(c *gin.Context) {
 	// Finally save random password in new user's struct.
 	NewUser.PasswordHash = string(hash)
 
-	// TODO: Generate secret link to initial password site.
+	// Generate secret link to initial password site.
+	var PasswordLink db.PasswordLink
+	PasswordLink.ID = fmt.Sprintf("%s", uuid.NewV4())
+	PasswordLink.UserID = NewUser.ID
+	PasswordLink.User = NewUser
+
+	// Link to password site is valid for 5 days.
+	PasswordLink.Expires = time.Now().Add(5 * 24 * time.Hour)
+
+	// Again, generate some amount of random bytes.
+	randomBytes = make([]byte, 36)
+	_, err = rand.Read(randomBytes)
+	if err != nil {
+
+		log.Printf("[CreateUser] Generating random bytes for password link went wrong: %s.\n", err.Error())
+
+		app.DB.Find(&Users)
+
+		// Report fatal error to user.
+		c.HTML(http.StatusInternalServerError, "admin-users.html", gin.H{
+			"PageTitle":  "Admin - Nutzerverwaltung",
+			"User":       User,
+			"Users":      Users,
+			"FatalError": "Auf dem Server ist ein Fehler aufgetreten. Erneut versuchen oder Admin kontaktieren.",
+		})
+
+		return
+	}
+
+	// Store string of random bytes as secret token.
+	PasswordLink.SecretToken = fmt.Sprintf("%x", randomBytes)
+
+	// Save password link element to database.
+	app.DB.Create(&PasswordLink)
 
 	// TODO: Send out link to new user.
 
