@@ -2,6 +2,7 @@
 <html>
 
     {{ template "head" . }}
+        <link rel = "stylesheet" type = "text/css" href = "/static/css/datatables.min.css"/>
 
     </head>
 
@@ -17,34 +18,16 @@
 
             </div>
 
-            {{ with .Error }}
-            <div class = "row alert alert-dismissible alert-danger">
-
-                <button type = "button" class = "close" data-dismiss = "alert">×</button>
-                <strong>Konnte Nuter nicht speichern!</strong><br>
-
-                <ul>
-                {{ range . }}
-                <li>{{ . }}</li>
-                {{ end }}
-                </ul>
-
-            </div>
-            {{ end }}
-
-            {{ with .NewPassword }}
-            <div class = "row alert alert-dismissible alert-success">
-
-                <button type = "button" class = "close" data-dismiss = "alert">×</button>
-                <strong>Nutzer wurde gespeichert!</strong><br />
-                Das temporäre Passwort ist: <i>{{ . }}</i>
-
-            </div>
-            {{ end }}
-
             <div class = "row">
 
                 <form action = "/admin/users" method = "POST" class = "form-horizontal">
+
+                    {{ with .FatalError }}
+                    <div class = "alert alert-danger"><b>{{ . }}</b></div>
+                    {{ end }}
+                    {{ range $key, $value := .Errors }}
+                    <div class = "alert alert-danger">{{ $value }}: <b>{{ $key }}</b></div>
+                    {{ end }}
 
                     <legend>Neuer Nutzer</legend>
 
@@ -84,10 +67,10 @@
 
                         <div class = "col-lg-9">
                             <select class = "form-control" id = "inputStatusGroup" name = "user-status-group">
-                                <option>Prof</option>
-                                <option>WiMi</option>
-                                <option>Studi</option>
-                                <option>Anderes</option>
+                                <option value = "0">Prof</option>
+                                <option value = "1">WiMi</option>
+                                <option value = "2">Studi</option>
+                                <option value = "3">Anderes</option>
                             </select>
                         </div>
 
@@ -99,8 +82,8 @@
 
                         <div class = "col-lg-9">
                             <select class = "form-control" id = "inputPrivileges" name = "user-privileges">
-                                <option>Admin</option>
-                                <option>Reviewer</option>
+                                <option value = "0">Admin</option>
+                                <option value = "1">Reviewer</option>
                             </select>
                         </div>
 
@@ -120,49 +103,61 @@
 
             <div class = "row">
 
-                <legend>Alle Nutzer</legend>
+                <legend>Alle Nutzer ({{ .Users | len }})</legend>
 
-                <table class = "table table-striped table-hover table-bordered">
+                <div class = "table-responsive">
 
-                    <tr>
-                        <th class = "col-lg-2">Vorname</th>
-                        <th class = "col-lg-2">Nachname</th>
-                        <th class = "col-lg-3">Mail (bestätigt?)</th>
-                        <th class = "col-lg-2">Statusgruppe</th>
-                        <th class = "col-lg-1">Rechte</th>
-                        <th class = "col-lg-1">Aktiviert?</th>
-                        <th class = "col-lg-1"></th>
-                    </tr>
+                    <table id = "usersList" class = "table table-striped table-hover table-bordered">
 
-                    {{ range .Users }}
-                    <tr>
-                        <td>{{ .FirstName }}</td>
-                        <td>{{ .LastName }}</td>
-                        <td>{{ .Mail }} ({{ if eq .MailVerified true }}✔{{ else }}✘{{ end }})</td>
-                        {{ if eq .StatusGroup 0 }}
-                        <td>Prof</td>
-                        {{ else if eq .StatusGroup 1 }}
-                        <td>WiMi</td>
-                        {{ else if eq .StatusGroup 2 }}
-                        <td>Studi</td>
-                        {{ else if eq .StatusGroup 3 }}
-                        <td>Sonstige</td>
-                        {{ end }}
-                        {{ if eq .Privileges 0 }}
-                        <td>Admin</td>
-                        {{ else if eq .Privileges 1 }}
-                        <td>Reviewer</td>
-                        {{ end }}
-                        {{ if eq .Enabled true }}
-                        <td>✔</td>
-                        {{ else }}
-                        <td>✘</td>
-                        {{ end }}
-                        <td><a href = "/admin/users/delete/{{ .ID }}"><span class = "glyphicon glyphicon-trash"></span></a></td>
-                    </tr>
-                    {{ end }}
+                        <thead>
 
-                </table>
+                            <tr>
+                                <th class = "col-lg-2">Vorname</th>
+                                <th class = "col-lg-2">Nachname</th>
+                                <th class = "col-lg-3">Mail (bestätigt?)</th>
+                                <th class = "col-lg-2">Statusgruppe</th>
+                                <th class = "col-lg-1">Rechte</th>
+                                <th class = "col-lg-1">Aktiviert</th>
+                                <th class = "col-lg-1"></th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {{ range .Users }}
+                            <tr>
+                                <td>{{ .FirstName }}</td>
+                                <td>{{ .LastName }}</td>
+                                <td>{{ .Mail }} ({{ if eq .MailVerified true }}✔{{ else }}✘{{ end }})</td>
+                                {{ if eq .StatusGroup 0 }}
+                                <td>Prof</td>
+                                {{ else if eq .StatusGroup 1 }}
+                                <td>WiMi</td>
+                                {{ else if eq .StatusGroup 2 }}
+                                <td>Studi</td>
+                                {{ else if eq .StatusGroup 3 }}
+                                <td>Sonstige</td>
+                                {{ end }}
+                                {{ if eq .Privileges 0 }}
+                                <td>Admin</td>
+                                {{ else if eq .Privileges 1 }}
+                                <td>Reviewer</td>
+                                {{ end }}
+                                {{ if eq .Enabled true }}
+                                <td class = "center">✔</td>
+                                {{ else }}
+                                <td class = "center">✘</td>
+                                {{ end }}
+                                <td class = "center"><a href = "/admin/users/delete/{{ .ID }}" data-toggle = "tooltip" data-placement = "right" title = "Nutzer deaktivieren"><span class = "glyphicon glyphicon-remove"></span></a></td>
+                            </tr>
+                            {{ end }}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 
@@ -170,6 +165,28 @@
 
         <script src = "/static/js/jquery.min.js"></script>
         <script src = "/static/js/bootstrap.min.js"></script>
+        <script src = "/static/js/datatables.min.js"></script>
+
+        <script>
+            $.extend(true, $.fn.dataTable.defaults, {
+                "searching": false
+            });
+
+            $(document).ready(function() {
+
+                $('#usersList').DataTable({
+                    "order": [[ 1, "asc" ]],
+                    "paging": false,
+                    "info": false,
+                    "fixedHeader": {
+                        "header": true,
+                        "footer": false
+                    }
+                });
+
+                $('[data-toggle="tooltip"]').tooltip();
+            } );
+        </script>
 
     </body>
 

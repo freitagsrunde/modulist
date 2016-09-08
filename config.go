@@ -54,9 +54,9 @@ func (app *App) DefineRoutes() {
 	app.Router.GET("/modules/done/:id", app.MarkModuleDone)
 
 	// Route 'feedback'.
-	app.Router.GET("/review/:moduleID", app.ReviewModule)
-	app.Router.POST("/review/:moduleID/addFeedback/:category", app.AddFeedback)
-	app.Router.GET("/deleteFeedback/:id", app.DeleteFeedback)
+	app.Router.GET("/review/module/:moduleID", app.ReviewModule)
+	app.Router.POST("/review/module/:moduleID/add/:category", app.AddFeedback)
+	app.Router.GET("/review/delete/:id", app.DeleteFeedback)
 
 	// Route 'settings'.
 	app.Router.GET("/settings", app.ListSettings)

@@ -53,7 +53,7 @@ func (app *App) UpdateSettings(c *gin.Context) {
 	err = c.BindWith(&Payload, binding.FormPost)
 	if err != nil {
 
-		c.HTML(http.StatusInternalServerError, "settings.html", gin.H{
+		c.HTML(http.StatusBadRequest, "settings.html", gin.H{
 			"PageTitle":  "Einstellungen",
 			"User":       User,
 			"FatalError": "Gesendete Daten zum Aktualisieren des Passworts konnten nicht verarbeitet werden. Bitte erneut versuchen.",

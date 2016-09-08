@@ -55,7 +55,7 @@ func (app *App) Login(c *gin.Context) {
 	err = c.BindWith(&Payload, binding.FormPost)
 	if err != nil {
 
-		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
 			"PageTitle":  "Willkommen bei MODULIST",
 			"MainTitle":  "Willkommen bei MODULIST",
 			"FatalError": "Gesendete Logindaten konnten nicht verarbeitet werden. Bitte erneut versuchen.",
@@ -80,7 +80,7 @@ func (app *App) Login(c *gin.Context) {
 
 	// Data is valid, try to locate user in database.
 	var User db.User
-	app.DB.First(&User, "\"mail\" = ?", Payload.Mail)
+	app.DB.First(&User, "\"mail\" = ? AND \"enabled\" = ?", Payload.Mail, true)
 
 	// Compare password hash from database with possible plaintext
 	// password from submitted login form. Compares in constant time.

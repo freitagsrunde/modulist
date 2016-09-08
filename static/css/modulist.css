@@ -28,3 +28,5 @@ main.container-fluid { margin: 0 15px; }
 #grayed-text { color: #999; }
 
 .dropdown-menu .no-space { margin: 0; }
+
+.center { text-align: center; }
