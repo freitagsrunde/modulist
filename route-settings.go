@@ -153,10 +153,7 @@ func (app *App) PasswordLinkView(c *gin.Context) {
 	}
 
 	// Check secret token for conformity and validity.
-	ErrorDesc := app.ConformAndValidate(&Payload)
-	if ErrorDesc != nil {
-
-		// If payload did not pass, redirect user to start page.
+	if errs := app.ConformAndValidate(&Payload); errs != nil {
 		c.Redirect(http.StatusFound, "/")
 
 		return
@@ -166,10 +163,15 @@ func (app *App) PasswordLinkView(c *gin.Context) {
 	var PasswordLink db.PasswordLink
 	app.DB.First(&PasswordLink, "\"secret_token\" = ?", Payload.SecretToken)
 
+	// If no element with matching token could be found, redirect.
+	if PasswordLink.ID == "" {
+		c.Redirect(http.StatusFound, "/")
+
+		return
+	}
+
 	// Check if token is not yet expired.
 	if time.Now().After(PasswordLink.Expires) {
-
-		// Token expired, redirect to start page.
 		c.Redirect(http.StatusFound, "/")
 
 		return

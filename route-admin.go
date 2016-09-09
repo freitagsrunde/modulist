@@ -25,7 +25,7 @@ type CreateUserPayload struct {
 	Privileges  int    `form:"user-privileges" conform:"trim" validate:"min=0"`
 }
 
-type DeactivateUserPayload struct {
+type ActDeactUserPayload struct {
 	ID string `conform:"trim" validate:"required,uuid4"`
 }
 
@@ -119,7 +119,6 @@ func (app *App) CreateUser(c *gin.Context) {
 	// Will never be used but we have to satisfy the database
 	// constraints and also have some worst case help.
 	randomBytes := make([]byte, 24)
-
 	_, err = rand.Read(randomBytes)
 	if err != nil {
 
@@ -197,7 +196,8 @@ func (app *App) CreateUser(c *gin.Context) {
 	// Save password link element to database.
 	app.DB.Create(&PasswordLink)
 
-	// TODO: Send out link to new user.
+	// TODO: Send out link to new user with password
+	//       link and expiration date of that link.
 
 	// Save new user to database.
 	app.DB.Create(&NewUser)
@@ -230,26 +230,14 @@ func (app *App) DeactivateUser(c *gin.Context) {
 	// Update expiration time of session.
 	app.CreateSession(c, *User)
 
-	var Users []db.User
-
 	// Retrieve ID of user to deactivate from URL.
-	Payload := DeactivateUserPayload{
+	Payload := ActDeactUserPayload{
 		ID: c.Param("id"),
 	}
 
 	// Check if sent ID is conform and valid.
-	ErrorDesc := app.ConformAndValidate(&Payload)
-	if ErrorDesc != nil {
-
-		app.DB.Find(&Users)
-
-		// If payload did not pass, report errors to user.
-		c.HTML(http.StatusBadRequest, "admin-users.html", gin.H{
-			"PageTitle": "Admin - Nutzerverwaltung",
-			"User":      User,
-			"Users":     Users,
-			"Errors":    ErrorDesc,
-		})
+	if errs := app.ConformAndValidate(&Payload); errs != nil {
+		c.Redirect(http.StatusFound, "/admin/users")
 
 		return
 	}
@@ -257,7 +245,6 @@ func (app *App) DeactivateUser(c *gin.Context) {
 	// Set user account specified by supplied ID
 	// to disabled in database.
 	app.DB.Model(&db.User{ID: Payload.ID}).Update("enabled", false)
-	app.DB.Find(&Users)
 
 	// Redirect if everything was successful.
 	c.Redirect(http.StatusFound, "/admin/users")
@@ -271,6 +258,92 @@ func (app *App) DeactivateUser(c *gin.Context) {
 // the password link.
 func (app *App) ActivateUser(c *gin.Context) {
 
+	// Check if user is authorized.
+	User, err := app.Authorize(c.Request, db.PRIVILEGE_ADMIN)
+	if err != nil {
+		c.Redirect(http.StatusFound, "/modules")
+
+		return
+	}
+
+	// Update expiration time of session.
+	app.CreateSession(c, *User)
+
+	// Retrieve ID of user to activate from URL.
+	Payload := ActDeactUserPayload{
+		ID: c.Param("id"),
+	}
+
+	// Check if sent ID is conform and valid.
+	if errs := app.ConformAndValidate(&Payload); errs != nil {
+		c.Redirect(http.StatusFound, "/admin/users")
+
+		return
+	}
+
+	// Load concerned user from database.
+	var ActivatedUser db.User
+	app.DB.First(&ActivatedUser, "\"id\" = ?", Payload.ID)
+
+	// Generate a random, secure password hash for reactivated user.
+	// Will never be used but we have to satisfy the database
+	// constraints and also have some worst case help.
+	randomBytes := make([]byte, 24)
+	_, err = rand.Read(randomBytes)
+	if err != nil {
+
+		log.Printf("[ActivateUser] Generating random bytes for temporary user password went wrong: %s.\n", err.Error())
+		c.Redirect(http.StatusFound, "/admin/users")
+
+		return
+	}
+
+	pwd := fmt.Sprintf("%x", randomBytes)
+
+	// Generate a secure bcrypt hash from generated random bytes.
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), app.HashCost)
+	if err != nil {
+
+		log.Printf("[ActivateUser] Creating bcrypt password hash went wrong: %s.\n", err.Error())
+		c.Redirect(http.StatusFound, "/admin/users")
+
+		return
+	}
+
+	// Save random password in to-be-reactivated user's struct.
+	ActivatedUser.PasswordHash = string(hash)
+
+	// Generate secret link to site for setting the password again.
+	var PasswordLink db.PasswordLink
+	PasswordLink.ID = fmt.Sprintf("%s", uuid.NewV4())
+	PasswordLink.UserID = ActivatedUser.ID
+	PasswordLink.User = ActivatedUser
+
+	// Link to password site is valid for 5 days.
+	PasswordLink.Expires = time.Now().Add(5 * 24 * time.Hour)
+
+	// Again, generate some amount of random bytes.
+	randomBytes = make([]byte, 36)
+	_, err = rand.Read(randomBytes)
+	if err != nil {
+
+		log.Printf("[ActivateUser] Generating random bytes for password link went wrong: %s.\n", err.Error())
+		c.Redirect(http.StatusFound, "/admin/users")
+
+		return
+	}
+
+	// Store string of random bytes as secret token.
+	PasswordLink.SecretToken = fmt.Sprintf("%x", randomBytes)
+
+	// Save password link element to database.
+	app.DB.Create(&PasswordLink)
+
+	// TODO: Send out mail to user containing link to password
+	//       reset site and expiration notification.
+
+	// Redirect if everything was successful.
+	c.Redirect(http.StatusFound, "/admin/users")
 }
 
 func (app *App) SendFeedback(c *gin.Context) {
@@ -292,7 +365,6 @@ func (app *App) SendFeedback(c *gin.Context) {
 		"PageTitle":     "Admin - Feedback versenden",
 		"User":          User,
 		"FeedbackMails": struct{}{},
-		"Error":         "",
 		"MailHeader":    "A",
 		"MailFooter":    "B",
 	})
