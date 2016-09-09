@@ -67,7 +67,8 @@ func (app *App) DefineRoutes() {
 	// Route 'admin'.
 	app.Router.GET("/admin/users", app.ListUsers)
 	app.Router.POST("/admin/users", app.CreateUser)
-	app.Router.GET("/admin/users/delete/:id", app.DeleteUser)
+	app.Router.GET("/admin/users/deactivate/:id", app.DeactivateUser)
+	app.Router.GET("/admin/users/activate/:id", app.ActivateUser)
 	app.Router.GET("/admin/send-feedback", app.SendFeedback)
 	app.Router.POST("/admin/send-feedback/:where", app.UpdateMailTemplate)
 

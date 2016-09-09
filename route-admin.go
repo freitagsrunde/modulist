@@ -25,6 +25,10 @@ type CreateUserPayload struct {
 	Privileges  int    `form:"user-privileges" conform:"trim" validate:"min=0"`
 }
 
+type DeactivateUserPayload struct {
+	ID string `conform:"trim" validate:"required,uuid4"`
+}
+
 // Functions
 
 func (app *App) ListUsers(c *gin.Context) {
@@ -205,10 +209,69 @@ func (app *App) CreateUser(c *gin.Context) {
 		"PageTitle": "Admin - Nutzerverwaltung",
 		"User":      User,
 		"Users":     Users,
+		"Success":   "Nutzer angelegt! Eine Mail mit einem Link zum Setzen des Passworts wurde versandt.",
 	})
 }
 
-func (app *App) DeleteUser(c *gin.Context) {}
+// DeactivateUser takes in an user's ID and after
+// some conformity and validity checks disables that
+// user's account. This will prevent the user from
+// logging in to the service.
+func (app *App) DeactivateUser(c *gin.Context) {
+
+	// Check if user is authorized.
+	User, err := app.Authorize(c.Request, db.PRIVILEGE_ADMIN)
+	if err != nil {
+		c.Redirect(http.StatusFound, "/modules")
+
+		return
+	}
+
+	// Update expiration time of session.
+	app.CreateSession(c, *User)
+
+	var Users []db.User
+
+	// Retrieve ID of user to deactivate from URL.
+	Payload := DeactivateUserPayload{
+		ID: c.Param("id"),
+	}
+
+	// Check if sent ID is conform and valid.
+	ErrorDesc := app.ConformAndValidate(&Payload)
+	if ErrorDesc != nil {
+
+		app.DB.Find(&Users)
+
+		// If payload did not pass, report errors to user.
+		c.HTML(http.StatusBadRequest, "admin-users.html", gin.H{
+			"PageTitle": "Admin - Nutzerverwaltung",
+			"User":      User,
+			"Users":     Users,
+			"Errors":    ErrorDesc,
+		})
+
+		return
+	}
+
+	// Set user account specified by supplied ID
+	// to disabled in database.
+	app.DB.Model(&db.User{ID: Payload.ID}).Update("enabled", false)
+	app.DB.Find(&Users)
+
+	// Redirect if everything was successful.
+	c.Redirect(http.StatusFound, "/admin/users")
+}
+
+// ActivateUser is the counterpart to DeactivateUser.
+// It takes in an user's ID, too. After checks, it
+// generates a password link again, much like the behaviour
+// when user accounts are first created. At the end
+// the user will be notified with a mail containing
+// the password link.
+func (app *App) ActivateUser(c *gin.Context) {
+
+}
 
 func (app *App) SendFeedback(c *gin.Context) {
 

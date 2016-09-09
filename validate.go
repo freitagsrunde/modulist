@@ -32,6 +32,8 @@ func (app *App) ConformAndValidate(Payload interface{}) map[string]string {
 				errResp[err.Field()] = "Das folgende Feld enthält keine Zahlen oder Sonderzeichen"
 			} else if err.Tag() == "email" {
 				errResp[err.Field()] = "Das folgende Feld enthält keine valide Mail-Adresse"
+			} else if err.Tag() == "uuid4" {
+				errResp[err.Field()] = "Die ID des Nutzers muss ein bestimmtes Format erfüllen"
 			}
 		}
 

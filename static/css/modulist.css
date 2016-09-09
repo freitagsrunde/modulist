@@ -30,3 +30,10 @@ main.container-fluid { margin: 0 15px; }
 .dropdown-menu .no-space { margin: 0; }
 
 .center { text-align: center; }
+
+.user-disabled {
+    background-color: #f4f4f4;
+    color: #777;
+}
+
+a[data-toggle]:hover { text-decoration: none; }

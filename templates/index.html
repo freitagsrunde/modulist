@@ -72,7 +72,7 @@
                             <div class = "alert alert-danger"><b>{{ . }}</b></div>
                             {{ end }}
                             {{ range $key, $value := .Errors }}
-                            <div class = "alert alert-danger">{{ $value }}: <b>{{ $key }}</b></div>
+                            <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                             {{ end }}
 
                             <label for = "inputEmail" class = "col-lg-2 control-label">Mail</label>

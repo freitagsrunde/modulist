@@ -278,8 +278,13 @@ func (app *App) UsePasswordLink(c *gin.Context) {
 	// Delete entry in table containing tokens for password reset.
 	app.DB.Delete(&PasswordLink)
 
-	// Update user element in database to new password hash.
-	app.DB.Model(&db.User{ID: PasswordLink.UserID}).Select("password_hash").Update("PasswordHash", string(hash))
+	// Update user element in database to new password hash,
+	// verified mail address and enable the account.
+	app.DB.Model(&db.User{ID: PasswordLink.UserID}).Updates(&db.User{
+		MailVerified: true,
+		PasswordHash: string(hash),
+		Enabled:      true,
+	})
 
 	// Everything went fine. Signal success to user.
 	c.HTML(http.StatusOK, "password-link.html", gin.H{

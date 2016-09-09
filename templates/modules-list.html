@@ -18,7 +18,7 @@
                 <div class = "alert alert-danger"><b>{{ . }}</b></div>
                 {{ end }}
                 {{ range $key, $value := .Errors }}
-                <div class = "alert alert-danger">{{ $value }}: <b>{{ $key }}</b></div>
+                <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
 
                 <div class = "col-lg-7 space-right">
