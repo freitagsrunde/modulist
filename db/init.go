@@ -67,7 +67,6 @@ func SetUpTables(db *gorm.DB) {
 	db.DropTableIfExists(&PasswordLink{})
 	db.DropTableIfExists(&Module{})
 	db.DropTableIfExists(&Person{})
-	db.DropTableIfExists("module_persons")
 
 	// Create new ones for all models.
 	db.CreateTable(&User{})
