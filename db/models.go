@@ -1,7 +1,11 @@
 package db
 
 import (
+	"fmt"
 	"time"
+
+	"github.com/jinzhu/gorm"
+	"github.com/satori/go.uuid"
 )
 
 // Constants
@@ -44,7 +48,7 @@ type User struct {
 type PasswordLink struct {
 	ID          string    `gorm:"primary_key"`
 	UserID      string    `gorm:"index;not null"`
-	User        User      `gorm:"ForeignKey:UserID;AssociationForeignKey:Refer"`
+	User        User      `gorm:"ForeignKey:UserID;"`
 	SecretToken string    `gorm:"not null;unique"`
 	Expires     time.Time `gorm:"not null"`
 }
@@ -79,6 +83,10 @@ type Module struct {
 	Script                  bool   `gorm:"not null"`
 	ScriptEnglish           bool   `gorm:"not null"`
 	Literature              string `gorm:"not null"`
+	ReferencePersonID       int
+	ReferencePerson         Person `gorm:"ForeignKey:ReferencePersonID;AssociationForeignKey:Refer;"`
+	ResponsiblePersonID     int
+	ResponsiblePerson       Person `gorm:"ForeignKey:ResponsiblePersonID;AssociationForeignKey:Refer;"`
 	RegistrationFormalities string
 }
 
@@ -112,6 +120,10 @@ type SQLiteModule struct {
 	Script                  bool      `gorm:"column:script"`
 	ScriptEnglish           bool      `gorm:"column:scriptEnglish"`
 	Literature              string    `gorm:"column:literature"`
+	ReferencePersonID       int       `gorm:"column:referencePerson_id"`
+	ReferencePerson         Person    `gorm:"ForeignKey:ReferencePersonID;AssociationForeignKey:Refer;"`
+	ResponsiblePersonID     int       `gorm:"column:responsiblePerson_id"`
+	ResponsiblePerson       Person    `gorm:"ForeignKey:ResponsiblePersonID;AssociationForeignKey:Refer;"`
 	RegistrationFormalities string    `gorm:"column:registrationFormalities"`
 }
 
@@ -119,10 +131,16 @@ func (sqliteModule *SQLiteModule) TableName() string {
 	return "modulecrawler_mtsmodule"
 }
 
-func (sqliteModule SQLiteModule) ToModule() Module {
+func (sqliteModule SQLiteModule) ToModule(db *gorm.DB) Module {
+
+	// Find in module involved persons in database.
+	var RefPerson Person
+	var ResPerson Person
+	db.First(&RefPerson, "\"id\" = ?", sqliteModule.ReferencePersonID)
+	db.First(&ResPerson, "\"id\" = ?", sqliteModule.ResponsiblePersonID)
 
 	return Module{
-		ID:                      sqliteModule.ID,
+		ID:                      fmt.Sprintf("%s", uuid.NewV4()),
 		Title:                   sqliteModule.Title,
 		TitleEnglish:            sqliteModule.TitleEnglish,
 		ECTS:                    sqliteModule.ECTS,
@@ -151,6 +169,35 @@ func (sqliteModule SQLiteModule) ToModule() Module {
 		Script:                  sqliteModule.Script,
 		ScriptEnglish:           sqliteModule.ScriptEnglish,
 		Literature:              sqliteModule.Literature,
+		ReferencePersonID:       sqliteModule.ReferencePersonID,
+		ReferencePerson:         RefPerson,
+		ResponsiblePersonID:     sqliteModule.ResponsiblePersonID,
+		ResponsiblePerson:       ResPerson,
 		RegistrationFormalities: sqliteModule.RegistrationFormalities,
+	}
+}
+
+type Person struct {
+	ID        int    `gorm:"primary_key"`
+	FirstName string `gorm:"index;not null"`
+	LastName  string `gorm:"index;not null"`
+}
+
+type SQLitePerson struct {
+	ID        int    `gorm:"column:id"`
+	FirstName string `gorm:"column:firstname"`
+	LastName  string `gorm:"column:lastname"`
+}
+
+func (sqlitePerson *SQLitePerson) TableName() string {
+	return "modulecrawler_person"
+}
+
+func (sqlitePerson SQLitePerson) ToPerson() Person {
+
+	return Person{
+		ID:        sqlitePerson.ID,
+		FirstName: sqlitePerson.FirstName,
+		LastName:  sqlitePerson.LastName,
 	}
 }

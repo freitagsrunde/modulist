@@ -7,677 +7,118 @@
 
     <body>
 
-        {{template "navbar" .}}
+        {{ template "navbar" . }}
 
         <main class = "container-fluid">
 
+            {{ with .Module }}
+
             <div class = "row">
 
-                <div class="col-sm-7">
-
-                    <h2>Feedback zu {{ .ModuleEntry.Title }}{{if .ModuleEntry.Done }}<sup><span class="badge">Done</span></sup>{{end}}</h2>
-                    <p><small style="color: #888;">Modul-ID: {{ .ModuleEntry.ModulID }} - Version: {{ .ModuleEntry.Version }} - <a href="https://moseskonto.tu-berlin.de/moses/modultransfersystem/bolognamodule/beschreibung/anzeigen.html?number={{ .ModuleEntry.ModulID }}&version={{ .ModuleEntry.Version }}">Link</a></p></small>
-
-                </div>
-
-                <div class="col-sm-5">
-                    <h2>Feedback</h2>
-                    <p><small style="color: #888;"><a onclick="feedbackCheck({{.ModuleEntry.ID}})" style="cursor: pointer;">Modul als {{if .ModuleEntry.Done}}un{{end}}fertig markieren</a></p></small>
-                </div>
+                <h2>Feedback zu <b>{{ .Title }}</b></h2>
 
             </div>
 
-            <div style="height: 20px;"></div>
+            <div class = "row">
+
+                <p>ModulID: {{ .ModuleID }} - Version: {{ .Version }} - <a href = "https://moseskonto.tu-berlin.de/moses/modultransfersystem/bolognamodule/beschreibung/anzeigen.html?number={{ .ModuleID }}&version={{ .Version }}">Link</a></p>
+
+            </div>
 
             <div class = "row">
-                <!-- MODULE HEADER -->
 
-                <div class="col-sm-7">
-                  <h3>Modulkopf</h3>
-                  <table class="table table-striped table-hover">
-                    <tr>
-                      <td><b>Deutscher Titel:</b></td>
-                      <td>{{ .ModuleEntry.Title }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>Englischer Titel:</b></td>
-                      <td>{{ .ModuleEntry.TitleEng }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>Stand:</b></td>
-                      <td>{{ .LastUpdate }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>Leistungspunkte:</b></td>
-                      <td>{{ .ModuleEntry.LP }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>Modulverantwortlicher</b></td>
-                      <td>{{ .ModuleEntry.MV }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>E-Mail:</b></td>
-                      <td>{{ .ModuleEntry.Mail }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>Ansprechpartner:</b></td>
-                      <td>{{ .ModuleEntry.Contact }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>Sekretariat:</b></td>
-                      <td>{{ .ModuleEntry.Office }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>URL:</b></td>
-                      <td><a href="{{ .ModuleEntry.URL }}" target="_blank">{{ .ModuleEntry.URL }}</a></td>
-                    </tr>
-                    <tr>
-                      <td><b>Sprache:</b></td>
-                      <td>{{ .ModuleEntry.Language }}</td>
-                    </tr>
-                  </table>
-                </div>
+                <div class = "col-lg-7 space-right">
 
-                <div class = "col-sm-5">
-                    <h3>Feedback zum Modulkopf</h3>
-                    <div class="panel-group" id="fb-modulkopf" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-modulkopf-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-modulkopf-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-modulkopf-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Modulkopf}}" class="panel-body">
-                            {{ $category := .Cat.Modulkopf }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                                {{if eq $feed.UserName $user.Name}}
-                                <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                                {{else if $user.Admin}}
-                                <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                                {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
+                    <h3 class = "space-down">Modulkopf</h3>
+
+                    <div class = "table-responsive">
+
+                        <table class = "table table-striped table-hover">
+
+                            <tr>
+                                <td><b>Deutscher Modultitel:</b></td>
+                                <td>{{ .Title }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Englischer Modultitel:</b></td>
+                                <td>{{ .TitleEnglish }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Leistungspunkte (ECTS):</b></td>
+                                <td>{{ .ECTS }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Sekretariat:</b></td>
+                                <td>{{ .AdministrationOffice }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Modulsprache:</b></td>
+                                <td>{{ .Lang }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Modulverantwortliche*r:</b></td>
+                                <td>{{ .ResponsiblePerson.FirstName }} {{ .ResponsiblePerson.LastName }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Ansprechpartner*in:</b></td>
+                                <td>{{ .ReferencePerson.FirstName }} {{ .ReferencePerson.LastName }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Kontakt:</b></td>
+                                <td><a href = "mailto:{{ .MailAddress }}">{{ .MailAddress }}</a></td>
+                            </tr>
+
+                            <tr>
+                                <td><b>URL:</b></td>
+                                <td><a href = "{{ .URL }}">{{ .URL }}</a></td>
+                            </tr>
+
+                        </table>
+
                     </div>
-                    <textarea id="comment-{{.Cat.Modulkopf}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Modulkopf}})">Feedback geben!</button>
+
+                </div>
+
+                <div class = "col-lg-5 space-left">
+
+                    <h3 class = "space-down">Feedback zum Modulkopf</h3>
+
                 </div>
 
             </div>
 
             <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Lernergebnisse</h3>
-                  <p>{{ .ModuleEntry.Lernergebnisse }}</p>
+
+                <div class = "col-lg-7 space-right">
+
+                    <h3 class = "space-down">Lernergebnisse</h3>
+
+                    <h4 class = "space-down">Deutsch</h4>
+
+                    <p class = "space-down">{{ .LearningOutcomes }}</p>
+
+                    <h4 class = "space-down">Englisch</h4>
+
+                    <p class = "space-down">{{ .LearningOutcomesEnglish }}</p>
+
                 </div>
 
-                <div class = "col-sm-5">
-                    <h3>Feedback zu den Lernergebnissen</h3>
-                    <div class="panel-group" id="fb-lernergebnisse" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-lernergebnisse-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-lernergebnisse-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-lernergebnisse-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Lernergebnisse}}" class="panel-body">
-                            {{ $category := .Cat.Lernergebnisse }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Lernergebnisse}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Lernergebnisse}})">Feedback geben!</button>
-                </div>
-            </div>
+                <div class = "col-lg-5 space-left">
 
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Lehrinhalte</h3>
-                  <p>{{ .ModuleEntry.Lehrinhalte }}</p>
-                </div>
+                    <h3 class = "space-down">Feedback zu Lernergebnissen</h3>
 
-                <div class = "col-sm-5">
-                      <h3>Feedback zu den Lehrinhalten</h3>
-                      <div class="panel-group" id="fb-lehrinhalte" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-lehrinhalte-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-lehrinhalte-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-lehrinhalte-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Lehrinhalte}}" class="panel-body">
-                            {{ $category := .Cat.Lehrinhalte }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Lehrinhalte}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Lehrinhalte}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Modulbestandteile</h3>
-                  <p>{{ .Modulbestandteile }}</p>
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zu den Modulbestandteilen</h3>
-
-                    <div class="panel-group" id="fb-modulbestandteile" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-modulbestandteile-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-modulbestandteile-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-modulbestandteile-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Modulbestandteile}}" class="panel-body">
-                            {{ $category := .Cat.Modulbestandteile }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Modulbestandteile}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Modulbestandteile}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Arbeitsaufwand und Leistungspunkte</h3>
-                  <p>{{ .Arbeitsaufwand }}</p>
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zum Arbeitsaufwand</h3>
-
-                    <div class="panel-group" id="fb-arbeitsaufwand" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-arbeitsaufwand-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-arbeitsaufwand-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-arbeitsaufwand-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Arbeitsaufwand}}" class="panel-body">
-                            {{ $category := .Cat.Arbeitsaufwand }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Arbeitsaufwand}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Arbeitsaufwand}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Lehr- und Lernformen</h3>
-                  <p>{{ .ModuleEntry.Lehrlernform }}</p>
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zu den Lehr- und Lehrformen</h3>
-
-                    <div class="panel-group" id="fb-lehrformen" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-lehrformen-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-lehrformen-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-lehrformen-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Lehrformen}}" class="panel-body">
-                            {{ $category := .Cat.Lehrformen }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Lehrformen}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Lehrformen}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Voraussetzungen</h3>
-                  <p>{{ .ModuleEntry.Voraussetzungen }}</p>
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zu den Voraussetzungen</h3>
-
-                    <div class="panel-group" id="fb-voraussetzung" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-voraussetzung-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-voraussetzung-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-voraussetzung-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Voraussetzung}}" class="panel-body">
-                            {{ $category := .Cat.Voraussetzung }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Voraussetzung}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Voraussetzung}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Abschluss des Moduls</h3>
-                  <table class="table table-striped table-hover">
-                    <tr>
-                      <td><b>Benotung:</b></td>
-                      <td>{{ .ModuleEntry.Benotung }}</td>
-                    </tr>
-                    <tr>
-                      <td><b>Prüfungsform:</b></td>
-                      <td>{{ .ModuleEntry.Pruefungsform }}</td>
-                    </tr>
-                  </table>
-
-                  {{ with .ModuleEntry.Pruefungsbeschreibung }}
-                    <p>{{ . }}</p>
-                  {{ end }}
-
-                  {{ .Pruefungselemente }}
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zum Abschluss des Moduls</h3>
-
-                    <div class="panel-group" id="fb-abschluss" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-abschluss-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-abschluss-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-abschluss-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Abschluss}}" class="panel-body">
-                            {{ $category := .Cat.Abschluss }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Abschluss}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Abschluss}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Dauer</h3>
-                  <p>{{ .ModuleEntry.Duration }} Semester</p>
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zu der Dauer</h3>
-
-                    <div class="panel-group" id="fb-dauer" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-dauer-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-dauer-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-dauer-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Dauer}}" class="panel-body">
-                            {{ $category := .Cat.Dauer }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Dauer}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Dauer}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Maximale Teilnehmer(innen)zahl</h3>
-                  {{ with .ModuleEntry.Attendees }}
-                  <p>Maximal {{ . }} Studierende</p>
-                  {{ else }}
-                  <p>Unbegrenzt.</p>
-                  {{ end }}
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zu der maximalen Teilnehmer(innen)zahl</h3>
-
-                    <div class="panel-group" id="fb-teilnehmerinnenzahl" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-teilnehmerinnenzahl-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-teilnehmerinnenzahl-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-teilnehmerinnenzahl-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Teilnehmerinnenzahl}}" class="panel-body">
-                            {{ $category := .Cat.Teilnehmerinnenzahl }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Teilnehmerinnenzahl}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Teilnehmerinnenzahl}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Anmeldeformalitäten</h3>
-                  <p>{{ .ModuleEntry.Registration }}</p>
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zu den Anmeldeformalitäten</h3>
-
-                    <div class="panel-group" id="fb-anmeldeformalitaeten" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-anmeldeformalitaeten-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-anmeldeformalitaeten-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-anmeldeformalitaeten-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Anmeldeformalitaeten}}" class="panel-body">
-                            {{ $category := .Cat.Anmeldeformalitaeten }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Anmeldeformalitaeten}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Anmeldeformalitaeten}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Script</h3>
-                  <p>{{ .ModuleEntry.Script }}</p>
                 </div>
 
             </div>
 
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Literatur</h3>
-                  {{ .Literatur }}
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zu Skripten und weiterführenden Literatur</h3>
-
-                    <div class="panel-group" id="fb-literatur" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-literatur-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-literatur-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-literatur-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Literatur}}" class="panel-body">
-                            {{ $category := .Cat.Literatur }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Literatur}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Literatur}})">Feedback geben!</button>
-                </div>
-            </div>
-
-            <div class = "row">
-                <div class="col-sm-7">
-                  <h3>Sonstiges</h3>
-                  {{ .ModuleEntry.Other }}
-                </div>
-
-                <div class = "col-sm-5">
-                    <h3>Feedback zu Sonstigem</h3>
-
-                    <div class="panel-group" id="fb-sonstiges" role="tablist">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="fb-sonstiges-head">
-                          <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#fb-sonstiges-body">
-                              Zeige Feedback
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="fb-sonstiges-body" class="panel-collapse collapse" role="tabpanel">
-                          <div id="comment-body-{{.Cat.Sonstiges}}" class="panel-body">
-                            {{ $category := .Cat.Sonstiges }}
-                            {{ $user := .User}}
-                            {{range $feed := .ModuleEntry.Feedback}}
-                              {{ if eq $feed.Category $category }}
-                              {{if eq $feed.UserName $user.Name}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{else if $user.Admin}}
-                              <div style="float: right"><span onclick="deleteFeedback({{$feed.ID}})" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div>
-                              {{end}}
-                                <b>{{$feed.UserName}} schrieb:</b>
-                                <p>{{$feed.Comment}}</p>
-                                <hr>
-                              {{end}}
-                            {{end}}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea id="comment-{{.Cat.Sonstiges}}" name="comment" class="form-control" rows="7"></textarea>
-                    <br>
-                    <button class="btn btn-primary" onclick="submitFeedback({{.Cat.Sonstiges}})">Feedback geben!</button>
-                </div>
-            </div>
-
-<!--
-            <div style="margin-top: 50px;">
-              <div style="float: right">
-                <button class="btn btn-primary">Feedback geben!</button>
-              </div>
-            </div>
--->
-
-            <div style="height: 50px"></div>
+            {{ end }}
 
         </main>
 

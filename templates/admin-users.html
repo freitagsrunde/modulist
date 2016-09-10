@@ -134,65 +134,65 @@
 
                             {{ range .Users }}
                             <tr{{ if eq .Enabled false }} class = "user-disabled"{{ end }}>
-                                <td>{{ .FirstName }}</td>
-                                <td>{{ .LastName }}</td>
-                                <td>{{ .Mail }} ({{ if eq .MailVerified true }}✔{{ else }}✘{{ end }})</td>
-                                {{ if eq .StatusGroup 0 }}
-                                <td>Prof</td>
-                                {{ else if eq .StatusGroup 1 }}
-                                <td>WiMi</td>
-                                {{ else if eq .StatusGroup 2 }}
-                                <td>Studi</td>
-                                {{ else if eq .StatusGroup 3 }}
-                                <td>Sonstige</td>
-                                {{ end }}
-                                {{ if eq .Privileges 0 }}
-                                <td>Admin</td>
-                                {{ else if eq .Privileges 1 }}
-                                <td>Reviewer</td>
-                                {{ end }}
-                                {{ if eq .Enabled true }}
-                                <td class = "center"><a href = "/admin/users/deactivate/{{ .ID }}" data-toggle = "tooltip" data-placement = "right" title = "Nutzer deaktivieren">✘</a></td>
-                                {{ else }}
-                                <td class = "center"><a href = "/admin/users/activate/{{ .ID }}" data-toggle = "tooltip" data-placement = "right" title = "Nutzer aktivieren">✔</a></td>
-                                {{ end }}
-                            </tr>
+                            <td>{{ .FirstName }}</td>
+                            <td>{{ .LastName }}</td>
+                            <td>{{ .Mail }} ({{ if eq .MailVerified true }}✔{{ else }}✘{{ end }})</td>
+                            {{ if eq .StatusGroup 0 }}
+                            <td>Prof</td>
+                            {{ else if eq .StatusGroup 1 }}
+                            <td>WiMi</td>
+                            {{ else if eq .StatusGroup 2 }}
+                            <td>Studi</td>
+                            {{ else if eq .StatusGroup 3 }}
+                            <td>Sonstige</td>
                             {{ end }}
+                            {{ if eq .Privileges 0 }}
+                            <td>Admin</td>
+                            {{ else if eq .Privileges 1 }}
+                            <td>Reviewer</td>
+                            {{ end }}
+                            {{ if eq .Enabled true }}
+                            <td class = "center"><a href = "/admin/users/deactivate/{{ .ID }}" data-toggle = "tooltip" data-placement = "right" title = "Nutzer deaktivieren">✘</a></td>
+                            {{ else }}
+                            <td class = "center"><a href = "/admin/users/activate/{{ .ID }}" data-toggle = "tooltip" data-placement = "right" title = "Nutzer aktivieren">✔</a></td>
+                            {{ end }}
+                        </tr>
+                        {{ end }}
 
-                        </tbody>
+                    </tbody>
 
-                    </table>
-
-                </div>
+                </table>
 
             </div>
 
-        </main>
+        </div>
 
-        <script src = "/static/js/jquery.min.js"></script>
-        <script src = "/static/js/bootstrap.min.js"></script>
-        <script src = "/static/js/datatables.min.js"></script>
+    </main>
 
-        <script>
-            $.extend(true, $.fn.dataTable.defaults, {
-                "searching": false
+    <script src = "/static/js/jquery.min.js"></script>
+    <script src = "/static/js/bootstrap.min.js"></script>
+    <script src = "/static/js/datatables.min.js"></script>
+
+    <script>
+        $.extend(true, $.fn.dataTable.defaults, {
+            "searching": false
+        });
+
+        $(document).ready(function() {
+
+            $('#usersList').DataTable({
+                "order": [[ 1, "asc" ]],
+                "paging": false,
+                "info": false,
+                "fixedHeader": {
+                    "header": true,
+                    "footer": false
+                }
             });
 
-            $(document).ready(function() {
-
-                $('#usersList').DataTable({
-                    "order": [[ 1, "asc" ]],
-                    "paging": false,
-                    "info": false,
-                    "fixedHeader": {
-                        "header": true,
-                        "footer": false
-                    }
-                });
-
-                $('[data-toggle="tooltip"]').tooltip();
-            } );
-        </script>
+            $('[data-toggle="tooltip"]').tooltip();
+        } );
+    </script>
 
     </body>
 

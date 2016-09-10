@@ -66,11 +66,44 @@ func SetUpTables(db *gorm.DB) {
 	db.DropTableIfExists(&User{})
 	db.DropTableIfExists(&PasswordLink{})
 	db.DropTableIfExists(&Module{})
+	db.DropTableIfExists(&Person{})
+	db.DropTableIfExists("module_persons")
 
 	// Create new ones for all models.
 	db.CreateTable(&User{})
 	db.CreateTable(&PasswordLink{})
 	db.CreateTable(&Module{})
+	db.CreateTable(&Person{})
+}
+
+// TransferPersons connects to the provided SQLite database
+// containing the persons involved in the faculty's modules
+// and exports them into the services's main database.
+func TransferPersons(db *gorm.DB, modulesDBPath string) {
+
+	// Connect to SQLite database.
+	modulesDB, err := gorm.Open("sqlite3", modulesDBPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Select all persons from SQLite database.
+	var sqlitePersons []SQLitePerson
+	modulesDB.Find(&sqlitePersons)
+
+	for _, sqlitePerson := range sqlitePersons {
+
+		// Convert each person from SQLite database to
+		// person made to be stored in main database.
+		var person Person
+		person = sqlitePerson.ToPerson()
+
+		// Save person to main database.
+		db.Create(&person)
+	}
+
+	// Close connection to database.
+	modulesDB.Close()
 }
 
 // TransferModules connects to the provided SQLite database containing
@@ -92,9 +125,12 @@ func TransferModules(db *gorm.DB, modulesDBPath string) {
 		// Convert each module from SQLite database to
 		// module made to be stored in main database.
 		var module Module
-		module = sqliteModule.ToModule()
+		module = sqliteModule.ToModule(db)
 
 		// Save it to main database.
 		db.Create(&module)
 	}
+
+	// Close connection to database.
+	modulesDB.Close()
 }

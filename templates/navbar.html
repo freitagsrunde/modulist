@@ -14,7 +14,7 @@
                 {{ with .User }}
                 <li><a id = "grayed-text">Ahoy, {{ .FirstName }}</a></li>
                 <li><a href = "/settings">Einstellungen</a></li>
-                    {{ if eq .Privileges 0 }}
+                {{ if eq .Privileges 0 }}
                 <li class = "dropdown">
                     <a href = "#" class = "dropdown-toggle" data-toggle = "dropdown" role = "button">Admin <span class = "caret"></span></a>
                     <ul class = "dropdown-menu" role = "menu">
@@ -22,7 +22,7 @@
                         <li><a href = "/admin/send-feedback">Feedback versenden</a></li>
                     </ul>
                 </li>
-                    {{ end }}
+                {{ end }}
                 {{ end }}
                 <li><a href = "/logout">Log out</a></li>
 

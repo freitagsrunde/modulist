@@ -112,20 +112,20 @@
 
                         <tbody>
 
-                    {{ with .Modules }}
-                        {{ range . }}
+                            {{ with .Modules }}
+                            {{ range . }}
                             <tr id = "module-{{ .ID }}">
                                 <td>{{ .ModuleID }}</td>
                                 <td>{{ .Version }}</td>
-                                <td><a href = "/review/{{ .ID }}">{{ .Title }}</a></td>
+                                <td><a href = "/review/module/{{ .ID }}">{{ .Title }}</a></td>
                                 <td>{{ .ECTS }}</td>
                                 <td>{{ .Lang }}</td>
                                 <td>{{ .ParticipantLimitation }}</td>
                                 <td style = "text-align: right;">A</td>
                                 <td>B</td>
                             </tr>
-                        {{ end }}
-                    {{ end }}
+                            {{ end }}
+                            {{ end }}
 
                         </tbody>
 

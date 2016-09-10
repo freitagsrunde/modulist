@@ -56,7 +56,7 @@ func (app *App) DefineRoutes() {
 	// Route 'feedback'.
 	app.Router.GET("/review/module/:moduleID", app.ReviewModule)
 	app.Router.POST("/review/module/:moduleID/add/:category", app.AddFeedback)
-	app.Router.GET("/review/delete/:id", app.DeleteFeedback)
+	app.Router.GET("/review/module/:moduleID/delete/:id", app.DeleteFeedback)
 
 	// Route 'settings'.
 	app.Router.GET("/settings", app.ListSettings)
@@ -148,12 +148,13 @@ func InitApp() *App {
 		// Create all needed database tables.
 		db.SetUpTables(app.DB)
 
-		// Transfer modules from SQLite database specified
-		// in .env file to main database.
+		// Transfer persons and modules from SQLite database
+		// specified in .env file to main database.
+		db.TransferPersons(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
 		db.TransferModules(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
 
 		// Default admin user creation.
-		fmt.Printf("\n========== Begin initializing MODULIST ==========\n\nCreate default admin user.\n")
+		fmt.Printf("\n\n\n========== Begin initializing MODULIST ==========\n\nCreate default admin user.\n")
 
 		var NewAdmin db.User
 
