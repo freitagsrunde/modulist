@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"html/template"
+
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 )
@@ -54,40 +56,47 @@ type PasswordLink struct {
 }
 
 type Module struct {
-	ID                      string `gorm:"primary_key"`
-	Title                   string `gorm:"index;not null"`
-	TitleEnglish            string `gorm:"index"`
-	ECTS                    int
-	ModuleID                int `gorm:"not null"`
-	Version                 int `gorm:"not null"`
-	Effective               time.Time
-	Validity                string `gorm:"not null"`
-	Lang                    string `gorm:"not null"`
-	MailAddress             string
-	Website                 string
-	AdministrationOffice    string
-	LearningOutcomes        string
-	LearningOutcomesEnglish string
-	TeachingContents        string
-	TeachingContentsEnglish string
-	URL                     string `gorm:"not null;unique"`
-	InstructiveForm         string `gorm:"not null"`
-	OptionalRequirements    string `gorm:"not null"`
-	MandatoryRequirements   string
-	Graded                  bool   `gorm:"not null"`
-	TypeOfExamination       string `gorm:"not null"`
-	ExaminationDescription  string
-	NumberOfTerms           int `gorm:"not null"`
-	ParticipantLimitation   int
-	Miscellaneous           string
-	Script                  bool   `gorm:"not null"`
-	ScriptEnglish           bool   `gorm:"not null"`
-	Literature              string `gorm:"not null"`
-	ReferencePersonID       int
-	ReferencePerson         Person `gorm:"ForeignKey:ReferencePersonID;AssociationForeignKey:Refer;"`
-	ResponsiblePersonID     int
-	ResponsiblePerson       Person `gorm:"ForeignKey:ResponsiblePersonID;AssociationForeignKey:Refer;"`
-	RegistrationFormalities string
+	ID                          string `gorm:"primary_key"`
+	Title                       string `gorm:"index;not null"`
+	TitleEnglish                string `gorm:"index"`
+	ECTS                        int
+	ModuleID                    int `gorm:"not null"`
+	Version                     int `gorm:"not null"`
+	Effective                   time.Time
+	Validity                    string `gorm:"not null"`
+	Lang                        string `gorm:"not null"`
+	MailAddress                 string
+	Website                     string
+	AdministrationOffice        string
+	LearningOutcomes            string
+	LearningOutcomesHTML        template.HTML `gorm:"-"`
+	LearningOutcomesEnglish     string
+	LearningOutcomesEnglishHTML template.HTML `gorm:"-"`
+	TeachingContents            string
+	TeachingContentsHTML        template.HTML `gorm:"-"`
+	TeachingContentsEnglish     string
+	TeachingContentsEnglishHTML template.HTML `gorm:"-"`
+	URL                         string        `gorm:"not null;unique"`
+	InstructiveForm             string        `gorm:"not null"`
+	OptionalRequirements        string        `gorm:"not null"`
+	OptionalRequirementsHTML    template.HTML `gorm:"-"`
+	MandatoryRequirements       string
+	MandatoryRequirementsHTML   template.HTML `gorm:"-"`
+	Graded                      bool          `gorm:"not null"`
+	TypeOfExamination           string        `gorm:"not null"`
+	ExaminationDescription      string
+	NumberOfTerms               int `gorm:"not null"`
+	ParticipantLimitation       int
+	Miscellaneous               string
+	MiscellaneousHTML           template.HTML `gorm:"-"`
+	Script                      bool          `gorm:"not null"`
+	ScriptEnglish               bool          `gorm:"not null"`
+	Literature                  string        `gorm:"not null"`
+	ReferencePersonID           int
+	ReferencePerson             Person `gorm:"ForeignKey:ReferencePersonID;AssociationForeignKey:Refer;"`
+	ResponsiblePersonID         int
+	ResponsiblePerson           Person `gorm:"ForeignKey:ResponsiblePersonID;AssociationForeignKey:Refer;"`
+	RegistrationFormalities     string
 }
 
 type SQLiteModule struct {

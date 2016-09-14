@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
+	"html/template"
 	"net/http"
 
 	"github.com/freitagsrunde/modulist/db"
@@ -47,6 +49,14 @@ func (app *App) ReviewModule(c *gin.Context) {
 	app.DB.First(&Module, "\"id\" = ?", Payload.ID)
 	app.DB.Model(&Module).Related(&Module.ReferencePerson, "ReferencePersonID")
 	app.DB.Model(&Module).Related(&Module.ResponsiblePerson, "ResponsiblePersonID")
+
+	Module.LearningOutcomesHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.LearningOutcomes), "\n", "<br />", -1))
+	Module.LearningOutcomesEnglishHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.LearningOutcomesEnglish), "\n", "<br />", -1))
+	Module.TeachingContentsHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.TeachingContents), "\n", "<br />", -1))
+	Module.TeachingContentsEnglishHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.TeachingContentsEnglish), "\n", "<br />", -1))
+	Module.OptionalRequirementsHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.OptionalRequirements), "\n", "<br />", -1))
+	Module.MandatoryRequirementsHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.MandatoryRequirements), "\n", "<br />", -1))
+	Module.MiscellaneousHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.Miscellaneous), "\n", "<br />", -1))
 
 	c.HTML(http.StatusOK, "module-feedback.html", gin.H{
 		"PageTitle": fmt.Sprintf("Feedback zu Modul #%d", Module.ModuleID),
