@@ -65,7 +65,7 @@ func (app *App) SearchModules(c *gin.Context) {
 	// Find all modules in main database that contain
 	// the query in their module titles.
 	var Modules []db.Module
-	app.DB.Where("lower(\"title\") LIKE ?", ("%" + Payload.Query + "%")).Find(&Modules)
+	app.DB.Where("lower(\"title\") LIKE ? OR lower(\"title_english\") LIKE ?", ("%" + Payload.Query + "%"), ("%" + Payload.Query + "%")).Find(&Modules)
 
 	c.HTML(http.StatusOK, "modules-list.html", gin.H{
 		"PageTitle":   "Übersicht der Modulbeschreibungen",

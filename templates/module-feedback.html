@@ -15,7 +15,7 @@
 
             <div class = "row">
 
-                <h2>Feedback zu <b>{{ .Title }}</b></h2>
+                <h2>Feedback zu <b>{{ if .Title.Valid }}{{ .Title.String }}{{ else }}<i>nicht angegeben</i>{{ end }}</b></h2>
 
             </div>
 
@@ -27,7 +27,7 @@
 
             <div class = "row">
 
-                <div class = "col-lg-7 space-right">
+                <div class = "col-sm-7 space-right">
 
                     <h3 class = "space-down">Modulkopf</h3>
 
@@ -37,12 +37,12 @@
 
                             <tr>
                                 <td><b>Deutscher Modultitel:</b></td>
-                                <td>{{ .Title }}</td>
+                                <td>{{ if .Title.Valid }}{{ .Title.String }}{{ else }}<i>nicht angegeben</i>{{ end }}</td>
                             </tr>
 
                             <tr>
                                 <td><b>Englischer Modultitel:</b></td>
-                                <td>{{ .TitleEnglish }}</td>
+                                <td>{{ if .TitleEnglish.Valid }}{{ .TitleEnglish.String }}{{ else }}<i>nicht angegeben</i>{{ end }}</td>
                             </tr>
 
                             <tr>
@@ -52,32 +52,32 @@
 
                             <tr>
                                 <td><b>Sekretariat:</b></td>
-                                <td>{{ .AdministrationOffice }}</td>
+                                <td>{{ if .AdministrationOffice.Valid }}{{ .AdministrationOffice.String }}{{ else }}<i>nicht angegeben</i>{{ end }}</td>
                             </tr>
 
                             <tr>
                                 <td><b>Modulsprache:</b></td>
-                                <td>{{ .Lang }}</td>
+                                <td>{{ if eq .Lang "GER" }}Deutsch{{ else if eq .Lang "ENG" }}Englisch{{ else if eq .Lang "UNKNOWN" }}Deutsch/Englisch{{ end }}</td>
                             </tr>
 
                             <tr>
                                 <td><b>Modulverantwortliche*r:</b></td>
-                                <td>{{ .ResponsiblePerson.FirstName }} {{ .ResponsiblePerson.LastName }}</td>
+                                <td>{{ if .ResponsiblePerson.LastName }}{{ if .ResponsiblePerson.FirstName }}{{ .ResponsiblePerson.FirstName }} {{ .ResponsiblePerson.LastName }}{{ else }}{{ .ResponsiblePerson.LastName }}{{ end }}{{ else }}<i>nicht angegeben</i>{{ end }}</td>
                             </tr>
 
                             <tr>
                                 <td><b>Ansprechpartner*in:</b></td>
-                                <td>{{ .ReferencePerson.FirstName }} {{ .ReferencePerson.LastName }}</td>
+                                <td>{{ if .ReferencePerson.LastName }}{{ if .ReferencePerson.FirstName }}{{ .ReferencePerson.FirstName }} {{ .ReferencePerson.LastName }}{{ else }}{{ .ReferencePerson.LastName }}{{ end }}{{ else }}<i>nicht angegeben</i>{{ end }}</td>
                             </tr>
 
                             <tr>
                                 <td><b>Kontakt:</b></td>
-                                <td><a href = "mailto:{{ .MailAddress }}">{{ .MailAddress }}</a></td>
+                                <td>{{ $length := len .MailAddress.Value }}{{ if eq $length 0 }}<i>nicht angegeben</i>{{ else }}<a href = "mailto:{{ .MailAddress.String }}">{{ .MailAddress.String }}</a>{{ end }}</td>
                             </tr>
 
                             <tr>
-                                <td><b>URL:</b></td>
-                                <td><a href = "{{ .URL }}">{{ .URL }}</a></td>
+                                <td><b>Website:</b></td>
+                                <td>{{ if .Website.Valid }}<a href = "{{ .Website.String }}">{{ .Website.String }}</a>{{ else }}<i>nicht angegeben</i>{{ end }}</td>
                             </tr>
 
                         </table>
@@ -86,9 +86,9 @@
 
                 </div>
 
-                <div class = "col-lg-5 space-left">
+                <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback zum Modulkopf</h3>
+                    <h3 class = "space-down">Feedback</h3>
 
                 </div>
 
@@ -96,23 +96,271 @@
 
             <div class = "row">
 
-                <div class = "col-lg-7 space-right">
+                <div class = "col-sm-7 space-right">
 
                     <h3 class = "space-down">Lernergebnisse</h3>
 
-                    <h4 class = "space-down">Deutsch</h4>
+                    <h4 class = "space-down">Deutsch:</h4>
 
-                    <p class = "space-down">{{ .LearningOutcomesHTML }}</p>
+                    <p class = "space-down">{{ if .LearningOutcomes.Valid }}{{ .LearningOutcomesHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
 
-                    <h4 class = "space-down">Englisch</h4>
+                    <h4 class = "space-down">Englisch:</h4>
 
-                    <p class = "space-down">{{ .LearningOutcomesEnglishHTML }}</p>
+                    <p class = "space-down">{{ if .LearningOutcomesEnglish.Valid }}{{ .LearningOutcomesEnglishHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
 
                 </div>
 
-                <div class = "col-lg-5 space-left">
+                <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback zu Lernergebnissen</h3>
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Lehrinhalte</h3>
+
+                    <h4 class = "space-down">Deutsch:</h4>
+
+                    <p class = "space-down">{{ if .TeachingContents.Valid }}{{ .TeachingContentsHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
+
+                    <h4 class = "space-down">Englisch:</h4>
+
+                    <p class = "space-down">{{ if .TeachingContentsEnglish.Valid }}{{ .TeachingContentsEnglishHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Modulbestandteile</h3>
+
+                    <p class = "space-down"><b>HINZUFÜGEN!!!</b></p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Arbeitsaufwand und Leistungspunkte</h3>
+
+                    <p class = "space-down"><b>HINZUFÜGEN!!!</b></p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Beschreibung der Lehr- und Lernformen</h3>
+
+                    <p class = "space-down">{{ .InstructiveFormHTML }}</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Voraussetzungen für die Teilnahme / Prüfung</h3>
+
+                    <h4 class = "space-down">Wünschenswerte Voraussetzungen für die Teilnahme zu den Lehrveranstaltungen:</h4>
+
+                    <p class = "space-down">{{ if .OptionalRequirementsHTML }}{{ .OptionalRequirementsHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
+
+                    <h4 class = "space-down">Verpflichtende Voraussetzungen für die Modulprüfungsanmeldung:</h4>
+
+                    <p class = "space-down">{{ if .MandatoryRequirements.Valid }}{{ .MandatoryRequirementsHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Abschluss des Moduls</h3>
+
+                    <h4 class = "space-down">Prüfungsform:</h4>
+
+                    <p class = "space-down">{{ if eq .TypeOfExamination "P" }}Portfolioprüfung{{ else if eq .TypeOfExamination "S" }}schriftlich{{ else if eq .TypeOfExamination "M" }}mündlich{{ end }}</p>
+
+                    <h4 class = "space-down">Benotet:</h4>
+
+                    <p class = "space-down">{{ if eq .Graded true }}benotet{{ else }}unbenotet{{ end }}</p>
+
+                    <h4 class = "space-down">Prüfungsformbeschreibung:</h4>
+
+                    <p class = "space-down">{{ if .ExaminationDescription.Valid }}{{ .ExaminationDescriptionHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
+
+                    <h4 class = "space-down">Prüfungselemente:</h4>
+
+                    <p class = "space-down"><b>HINZUFÜGEN!!!</b></p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Dauer des Moduls</h3>
+
+                    <p class = "space-down">Das Modul kann in {{ .NumberOfTerms }} Semester(n) abgeschlossen werden.</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Maximale teilnehmende Personen</h3>
+
+                    <p class = "space-down">{{ if .ParticipantLimitation.Valid }}Das Modul ist auf {{ .ParticipantLimitation.Int64 }} Teilnehmende begrenzt.{{ else }}Das Modul hat keine begrenzte Teilnehmendenanzahl.{{ end }}</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Anmeldeformalitäten</h3>
+
+                    <p class = "space-down">{{ if .RegistrationFormalities.Valid }}{{ .RegistrationFormalitiesHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Skript</h3>
+
+                    <h4 class = "space-down">Deutsch <b>(oder ist es 'Papierform'?)</b>:</h4>
+
+                    <p class = "space-down">{{ if eq .Script true }}Es wird ein Skript auf Deutsch angeboten.{{ else }}<i>nicht verfügbar</i>{{ end }}</p>
+
+                    <h4 class = "space-down">Englisch <b>(oder ist es 'elektronisch'?)</b>:</h4>
+
+                    <p class = "space-down">{{ if eq .ScriptEnglish true }}Es wird ein Skript auf Englisch angeboten.{{ else }}<i>nicht verfügbar</i>{{ end }}</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Literaturhinweise</h3>
+
+                    <p class = "space-down">{{ .LiteratureHTML }}</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
+
+                </div>
+
+            </div>
+
+            <div class = "row">
+
+                <div class = "col-sm-7 space-right">
+
+                    <h3 class = "space-down">Sonstiges</h3>
+
+                    <p class = "space-down">{{ if .Miscellaneous.Valid }}{{ .MiscellaneousHTML }}{{ else }}<i>nicht angegeben</i>{{ end }}</p>
+
+                </div>
+
+                <div class = "col-sm-5 space-left">
+
+                    <h3 class = "space-down">Feedback</h3>
 
                 </div>
 

@@ -40,9 +40,9 @@
 
                     <div class = "form-group">
 
-                        <label for = "oldPassword" class = "col-lg-3 control-label">Altes Passwort:</label>
+                        <label for = "oldPassword" class = "col-sm-3 control-label">Altes Passwort:</label>
 
-                        <div class = "col-lg-9">
+                        <div class = "col-sm-9">
                             <input type = "password" id = "oldPassword" class = "form-control" name = "old-password" placeholder = "Altes Passwort">
                         </div>
 
@@ -50,9 +50,9 @@
 
                     <div class = "form-group">
 
-                        <label for = "newPassword" class = "col-lg-3 control-label">Neues Passwort:</label>
+                        <label for = "newPassword" class = "col-sm-3 control-label">Neues Passwort:</label>
 
-                        <div class = "col-lg-9">
+                        <div class = "col-sm-9">
                             <input type = "password" id = "newPassword" class = "form-control" name = "new-password" placeholder = "Neues Passwort">
                         </div>
 
@@ -60,9 +60,9 @@
 
                     <div class = "form-group">
 
-                        <label for = "repeatNewPassword" class = "col-lg-3 control-label">Neues Passwort wiederholen:</label>
+                        <label for = "repeatNewPassword" class = "col-sm-3 control-label">Neues Passwort wiederholen:</label>
 
-                        <div class = "col-lg-9">
+                        <div class = "col-sm-9">
                             <input type = "password" id = "repeatNewPassword" class = "form-control" name = "repeat-new-password" placeholder = "Neues Passwort wiederholen">
                         </div>
 
@@ -70,7 +70,7 @@
 
                     <div class = "form-group">
 
-                        <div class = "col-lg-2 col-lg-offset-3">
+                        <div class = "col-sm-2 col-sm-offset-3">
                             <button type = "submit" class = "btn btn-success">Ändern</button>
                         </div>
 
@@ -87,30 +87,30 @@
                 <table class = "table table-striped table-hover table-bordered">
 
                     <tr>
-                        <td class = "col-lg-3">Vorname:</td>
-                        <td class = "col-lg-9">{{ .User.FirstName }}</td>
+                        <td class = "col-sm-3">Vorname:</td>
+                        <td class = "col-sm-9">{{ .User.FirstName }}</td>
                     </tr>
 
                     <tr>
-                        <td class = "col-lg-3">Nachname:</td>
-                        <td class = "col-lg-9">{{ .User.LastName }}</td>
+                        <td class = "col-sm-3">Nachname:</td>
+                        <td class = "col-sm-9">{{ .User.LastName }}</td>
                     </tr>
 
                     <tr>
-                        <td class = "col-lg-3">Mail:</td>
-                        <td class = "col-lg-9">{{ .User.Mail }}</td>
+                        <td class = "col-sm-3">Mail:</td>
+                        <td class = "col-sm-9">{{ .User.Mail }}</td>
                     </tr>
 
                     <tr>
-                        <td class = "col-lg-3">Statusgruppe:</td>
+                        <td class = "col-sm-3">Statusgruppe:</td>
                         {{ if eq .User.StatusGroup 0 }}
-                        <td class = "col-lg-9">Prof</td>
+                        <td class = "col-sm-9">Prof</td>
                         {{ else if eq .User.StatusGroup 1 }}
-                        <td class = "col-lg-9">WiMi</td>
+                        <td class = "col-sm-9">WiMi</td>
                         {{ else if eq .User.StatusGroup 2 }}
-                        <td class = "col-lg-9">Studi</td>
+                        <td class = "col-sm-9">Studi</td>
                         {{ else if eq .User.StatusGroup 3 }}
-                        <td class = "col-lg-9">Sonstige</td>
+                        <td class = "col-sm-9">Sonstige</td>
                         {{ end }}
                     </tr>
 

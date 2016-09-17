@@ -21,7 +21,7 @@
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
 
-                <div class = "col-lg-7 space-right">
+                <div class = "col-sm-7 space-right">
 
                     <form action = "/modules/search" method = "GET" class = "form-horizontal">
 
@@ -41,7 +41,7 @@
 
                 </div>
 
-                <div class = "col-lg-2 dropdown">
+                <div class = "col-sm-2 dropdown">
 
                     <button type = "button" class = "btn btn-default dropdown-toggle" id = "firstLetterSelector" data-toggle = "dropdown" aria-haspopup = "true" aria-expanded = "true">
                         Anfangsbuchstabe {{ .FirstLetter }}
@@ -117,10 +117,10 @@
                             <tr id = "module-{{ .ID }}">
                                 <td>{{ .ModuleID }}</td>
                                 <td>{{ .Version }}</td>
-                                <td><a href = "/review/module/{{ .ID }}">{{ .Title }}</a></td>
+                                <td><a href = "/review/module/{{ .ID }}">{{ if .Title.Valid }}{{ .Title.String }}{{ else }}- <i>nicht angegeben</i> -{{ end }}</a></td>
                                 <td>{{ .ECTS }}</td>
-                                <td>{{ .Lang }}</td>
-                                <td>{{ .ParticipantLimitation }}</td>
+                                <td>{{ if eq .Lang "GER" }}Deutsch{{ else if eq .Lang "ENG" }}Englisch{{ else if eq .Lang "UNKNOWN" }}Deutsch/Englisch{{ end }}</td>
+                                <td>{{ if .ParticipantLimitation.Valid }}{{ .ParticipantLimitation.Int64 }}{{ end }}</td>
                                 <td style = "text-align: right;">A</td>
                                 <td>B</td>
                             </tr>

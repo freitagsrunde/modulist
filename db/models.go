@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"database/sql"
 	"html/template"
 
 	"github.com/jinzhu/gorm"
@@ -56,84 +57,88 @@ type PasswordLink struct {
 }
 
 type Module struct {
-	ID                          string `gorm:"primary_key"`
-	Title                       string `gorm:"index;not null"`
-	TitleEnglish                string `gorm:"index"`
-	ECTS                        int
-	ModuleID                    int `gorm:"not null"`
-	Version                     int `gorm:"not null"`
-	Effective                   time.Time
+	ID                          string         `gorm:"primary_key"`
+	ModuleID                    int            `gorm:"not null"`
+	Version                     int            `gorm:"not null"`
+	Title                       sql.NullString `gorm:"index"`
+	TitleEnglish                sql.NullString `gorm:"index"`
+	ECTS                        int            `gorm:"not null"`
+	Effective                   *time.Time
 	Validity                    string `gorm:"not null"`
 	Lang                        string `gorm:"not null"`
-	MailAddress                 string
-	Website                     string
-	AdministrationOffice        string
-	LearningOutcomes            string
+	MailAddress                 sql.NullString
+	Website                     sql.NullString
+	AdministrationOffice        sql.NullString
+	URL                         string `gorm:"not null;unique"`
+	LearningOutcomes            sql.NullString
 	LearningOutcomesHTML        template.HTML `gorm:"-"`
-	LearningOutcomesEnglish     string
+	LearningOutcomesEnglish     sql.NullString
 	LearningOutcomesEnglishHTML template.HTML `gorm:"-"`
-	TeachingContents            string
+	TeachingContents            sql.NullString
 	TeachingContentsHTML        template.HTML `gorm:"-"`
-	TeachingContentsEnglish     string
+	TeachingContentsEnglish     sql.NullString
 	TeachingContentsEnglishHTML template.HTML `gorm:"-"`
-	URL                         string        `gorm:"not null;unique"`
 	InstructiveForm             string        `gorm:"not null"`
+	InstructiveFormHTML         template.HTML `gorm:"-"`
 	OptionalRequirements        string        `gorm:"not null"`
 	OptionalRequirementsHTML    template.HTML `gorm:"-"`
-	MandatoryRequirements       string
+	MandatoryRequirements       sql.NullString
 	MandatoryRequirementsHTML   template.HTML `gorm:"-"`
 	Graded                      bool          `gorm:"not null"`
 	TypeOfExamination           string        `gorm:"not null"`
-	ExaminationDescription      string
-	NumberOfTerms               int `gorm:"not null"`
-	ParticipantLimitation       int
-	Miscellaneous               string
-	MiscellaneousHTML           template.HTML `gorm:"-"`
+	ExaminationDescription      sql.NullString
+	ExaminationDescriptionHTML  template.HTML `gorm:"-"`
+	NumberOfTerms               int           `gorm:"not null"`
+	ParticipantLimitation       sql.NullInt64
+	RegistrationFormalities     sql.NullString
+	RegistrationFormalitiesHTML template.HTML `gorm:"-"`
 	Script                      bool          `gorm:"not null"`
 	ScriptEnglish               bool          `gorm:"not null"`
 	Literature                  string        `gorm:"not null"`
-	ReferencePersonID           int
+	LiteratureHTML              template.HTML `gorm:"-"`
+	Miscellaneous               sql.NullString
+	MiscellaneousHTML           template.HTML `gorm:"-"`
+	ReferencePersonID           sql.NullInt64
 	ReferencePerson             Person `gorm:"ForeignKey:ReferencePersonID;AssociationForeignKey:Refer;"`
-	ResponsiblePersonID         int
+	ResponsiblePersonID         sql.NullInt64
 	ResponsiblePerson           Person `gorm:"ForeignKey:ResponsiblePersonID;AssociationForeignKey:Refer;"`
-	RegistrationFormalities     string
 }
 
 type SQLiteModule struct {
-	ID                      string    `gorm:"column:id"`
-	Title                   string    `gorm:"column:title"`
-	TitleEnglish            string    `gorm:"column:titleEnglish"`
-	ECTS                    int       `gorm:"column:ects"`
-	ModuleID                int       `gorm:"column:moduleID"`
-	Version                 int       `gorm:"column:version"`
-	Effective               time.Time `gorm:"column:effective"`
-	Validity                string    `gorm:"column:validity"`
-	Lang                    string    `gorm:"column:lang"`
-	MailAddress             string    `gorm:"column:mailAddress"`
-	Website                 string    `gorm:"column:website"`
-	AdministrationOffice    string    `gorm:"column:administrationOffice"`
-	LearningOutcomes        string    `gorm:"column:learningOutcomes"`
-	LearningOutcomesEnglish string    `gorm:"column:learningOutcomesEnglish"`
-	TeachingContents        string    `gorm:"column:teachingContents"`
-	TeachingContentsEnglish string    `gorm:"column:teachingContentsEnglish"`
-	URL                     string    `gorm:"column:url"`
-	InstructiveForm         string    `gorm:"column:instructiveForm"`
-	OptionalRequirements    string    `gorm:"column:optionalRequirements"`
-	MandatoryRequirements   string    `gorm:"column:mandatoryRequirements"`
-	Graded                  bool      `gorm:"column:graded"`
-	TypeOfExamination       string    `gorm:"column:typeOfExamination"`
-	ExaminationDescription  string    `gorm:"column:examinationDescription"`
-	NumberOfTerms           int       `gorm:"column:numberOfTerms"`
-	ParticipantLimitation   int       `gorm:"column:participantLimitation"`
-	Miscellaneous           string    `gorm:"column:miscellaneous"`
-	Script                  bool      `gorm:"column:script"`
-	ScriptEnglish           bool      `gorm:"column:scriptEnglish"`
-	Literature              string    `gorm:"column:literature"`
-	ReferencePersonID       int       `gorm:"column:referencePerson_id"`
-	ReferencePerson         Person    `gorm:"ForeignKey:ReferencePersonID;AssociationForeignKey:Refer;"`
-	ResponsiblePersonID     int       `gorm:"column:responsiblePerson_id"`
-	ResponsiblePerson       Person    `gorm:"ForeignKey:ResponsiblePersonID;AssociationForeignKey:Refer;"`
-	RegistrationFormalities string    `gorm:"column:registrationFormalities"`
+	ID                      string         `gorm:"column:id"`
+	Title                   sql.NullString `gorm:"column:title"`
+	TitleEnglish            sql.NullString `gorm:"column:titleEnglish"`
+	ECTS                    int            `gorm:"column:ects"`
+	ModuleID                int            `gorm:"column:moduleID"`
+	Version                 int            `gorm:"column:version"`
+	Effective               *time.Time     `gorm:"column:effective"`
+	Validity                string         `gorm:"column:validity"`
+	Lang                    string         `gorm:"column:lang"`
+	MailAddress             sql.NullString `gorm:"column:mailAddress"`
+	Website                 sql.NullString `gorm:"column:website"`
+	AdministrationOffice    sql.NullString `gorm:"column:administrationOffice"`
+	LearningOutcomes        sql.NullString `gorm:"column:learningOutcomes"`
+	LearningOutcomesEnglish sql.NullString `gorm:"column:learningOutcomesEnglish"`
+	TeachingContents        sql.NullString `gorm:"column:teachingContents"`
+	TeachingContentsEnglish sql.NullString `gorm:"column:teachingContentsEnglish"`
+	URL                     string         `gorm:"column:url"`
+	InstructiveForm         string         `gorm:"column:instructiveForm"`
+	OptionalRequirements    string         `gorm:"column:optionalRequirements"`
+	MandatoryRequirements   sql.NullString `gorm:"column:mandatoryRequirements"`
+	Graded                  bool           `gorm:"column:graded"`
+	TypeOfExamination       string         `gorm:"column:typeOfExamination"`
+	ExaminationDescription  sql.NullString `gorm:"column:examinationDescription"`
+	NumberOfTerms           int            `gorm:"column:numberOfTerms"`
+	ParticipantLimitation   sql.NullInt64  `gorm:"column:participantLimitation"`
+	Miscellaneous           sql.NullString `gorm:"column:miscellaneous"`
+	Script                  bool           `gorm:"column:script"`
+	ScriptEnglish           bool           `gorm:"column:scriptEnglish"`
+	Literature              string         `gorm:"column:literature"`
+	ReferencePersonID       sql.NullInt64  `gorm:"column:referencePerson_id"`
+	ReferencePerson         Person         `gorm:"ForeignKey:ReferencePersonID;AssociationForeignKey:Refer;"`
+	ResponsiblePersonID     sql.NullInt64  `gorm:"column:responsiblePerson_id"`
+	ResponsiblePerson       Person         `gorm:"ForeignKey:ResponsiblePersonID;AssociationForeignKey:Refer;"`
+	RegistrationFormalities sql.NullString `gorm:"column:registrationFormalities"`
 }
 
 func (sqliteModule *SQLiteModule) TableName() string {

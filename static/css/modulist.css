@@ -6,11 +6,7 @@ html {
 body { background-color: #fafafa; }
 
 main.container-fluid { margin: 0 15px; }
-
-.row {
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
+.row { margin: 15px 0; }
 
 .row > [class*='col-'] {
     padding-right: 0;
@@ -18,15 +14,12 @@ main.container-fluid { margin: 0 15px; }
 }
 
 .row > .space-right { padding-right: 15px; }
-
 .row > .space-left { padding-left: 15px; }
-
 .space-down { padding-bottom: 15px; }
 
 .headline { margin-bottom: 25px; }
 
 .login-top-row { margin-top: 12%; }
-
 .login-header { padding: 0 0 5%; }
 
 #grayed-text { color: #999; }
