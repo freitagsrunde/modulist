@@ -67,12 +67,16 @@ func SetUpTables(db *gorm.DB) {
 	db.DropTableIfExists(&PasswordLink{})
 	db.DropTableIfExists(&Module{})
 	db.DropTableIfExists(&Person{})
+	db.DropTableIfExists(&Course{})
+	db.DropTableIfExists(&ModuleCourses{})
 
 	// Create new ones for all models.
 	db.CreateTable(&User{})
 	db.CreateTable(&PasswordLink{})
 	db.CreateTable(&Module{})
 	db.CreateTable(&Person{})
+	db.CreateTable(&Course{})
+	db.CreateTable(&ModuleCourses{})
 }
 
 // TransferPersons connects to the provided SQLite database
@@ -105,6 +109,36 @@ func TransferPersons(db *gorm.DB, modulesDBPath string) {
 	modulesDB.Close()
 }
 
+// TransferCourses connects to the provided SQLite database
+// containing the courses as the main parts of all modules
+// and transfers them into the main database.
+func TransferCourses(db *gorm.DB, modulesDBPath string) {
+
+	// Connect to SQLite database.
+	modulesDB, err := gorm.Open("sqlite3", modulesDBPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Select all courses from SQLite database.
+	var sqliteCourses []SQLiteCourse
+	modulesDB.Find(&sqliteCourses)
+
+	for _, sqliteCourse := range sqliteCourses {
+
+		// Convert each course from SQLite database to
+		// course made to be stored in main database.
+		var course Course
+		course = sqliteCourse.ToCourse()
+
+		// Save course to main database.
+		db.Create(&course)
+	}
+
+	// Close connection to database.
+	modulesDB.Close()
+}
+
 // TransferModules connects to the provided SQLite database containing
 // the modules and exports them into the services's main database.
 func TransferModules(db *gorm.DB, modulesDBPath string) {
@@ -128,6 +162,37 @@ func TransferModules(db *gorm.DB, modulesDBPath string) {
 
 		// Save it to main database.
 		db.Create(&module)
+	}
+
+	// Close connection to database.
+	modulesDB.Close()
+}
+
+// TransferModuleCourses connects to the provided SQLite
+// database containing the links between courses and modules
+// and transfers them into the main database.
+func TransferModuleCourses(db *gorm.DB, modulesDBPath string) {
+
+	// Connect to SQLite database.
+	modulesDB, err := gorm.Open("sqlite3", modulesDBPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Select all module-course-elements from SQLite database.
+	var sqliteModuleCourses []SQLiteModuleCourses
+	modulesDB.Find(&sqliteModuleCourses)
+
+	for _, sqliteModuleCoursesElem := range sqliteModuleCourses {
+
+		// Convert each link between a module and a course
+		// from SQLite database to a relationship made to be
+		// stored in main database.
+		var moduleCourses ModuleCourses
+		moduleCourses = sqliteModuleCoursesElem.ToModuleCourses()
+
+		// Save relationship to main database.
+		db.Create(&moduleCourses)
 	}
 
 	// Close connection to database.
