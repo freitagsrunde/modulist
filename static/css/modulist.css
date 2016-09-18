@@ -16,6 +16,7 @@ main.container-fluid { margin: 0 15px; }
 .row > .space-right { padding-right: 15px; }
 .row > .space-left { padding-left: 15px; }
 .space-down { padding-bottom: 15px; }
+.small-space-right { padding-right: 7px; }
 
 .headline { margin-bottom: 25px; }
 
@@ -25,8 +26,10 @@ main.container-fluid { margin: 0 15px; }
 #grayed-text { color: #999; }
 
 .dropdown-menu .no-space { margin: 0; }
+.table.with-bottomline { margin-bottom: 10px; }
 
 .center { text-align: center; }
+.right { text-align: right; }
 
 .user-disabled {
     background-color: #f4f4f4;

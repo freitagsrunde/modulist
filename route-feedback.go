@@ -52,9 +52,11 @@ func (app *App) ReviewModule(c *gin.Context) {
 
 	// Retrieve module information for supplied ID from database.
 	var Module db.Module
-	app.DB.Preload("Courses").First(&Module, "\"id\" = ?", Payload.ID)
+	app.DB.Preload("Courses").Preload("WorkingEfforts").First(&Module, "\"id\" = ?", Payload.ID)
 
-	fmt.Println(Module.Courses)
+	// Convert the working effort elements from database to
+	// structure better suited for displaying in HTML template.
+	Module.WorkingEffortsHTML = db.WorkingEffortsConvert(Module.WorkingEfforts)
 
 	// Only use this field if it contains a valid value.
 	if Module.ReferencePersonID.Valid {

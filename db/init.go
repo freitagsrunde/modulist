@@ -68,6 +68,7 @@ func SetUpTables(db *gorm.DB) {
 	db.DropTableIfExists(&Module{})
 	db.DropTableIfExists(&Person{})
 	db.DropTableIfExists(&Course{})
+	db.DropTableIfExists(&WorkingEffort{})
 	db.DropTableIfExists("module_courses")
 
 	// Create new ones for all models.
@@ -76,6 +77,7 @@ func SetUpTables(db *gorm.DB) {
 	db.CreateTable(&Module{})
 	db.CreateTable(&Person{})
 	db.CreateTable(&Course{})
+	db.CreateTable(&WorkingEffort{})
 }
 
 // TransferPersons connects to the provided SQLite database
@@ -195,6 +197,36 @@ func TransferModuleCourses(db *gorm.DB, modulesDBPath string) {
 
 		// Update module in database.
 		db.Save(&M)
+	}
+
+	// Close connection to database.
+	modulesDB.Close()
+}
+
+// TransferWorkingEffort connects to the provided SQLite database
+// containing information about working effort and transfers
+// it into the main database.
+func TransferWorkingEffort(db *gorm.DB, modulesDBPath string) {
+
+	// Connect to SQLite database.
+	modulesDB, err := gorm.Open("sqlite3", modulesDBPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Select all working efforts from SQLite database.
+	var sqliteWorkingEfforts []SQLiteWorkingEffort
+	modulesDB.Find(&sqliteWorkingEfforts)
+
+	for _, sqliteWorkingEffort := range sqliteWorkingEfforts {
+
+		// Convert each working effort from SQLite database to
+		// working effort made to be stored in main database.
+		var workingEffort WorkingEffort
+		workingEffort = sqliteWorkingEffort.ToWorkingEffort()
+
+		// Save working effort to main database.
+		db.Create(&workingEffort)
 	}
 
 	// Close connection to database.
