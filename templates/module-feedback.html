@@ -148,7 +148,37 @@
 
                     <h3 class = "space-down">Modulbestandteile</h3>
 
-                    <p class = "space-down"><b>HINZUFÜGEN!!!</b></p>
+                    <div class = "table-responsive space-down">
+
+                        <table class = "table table-hover table-bordered">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Lehrveranstaltungen</th>
+                                    <th class = "center">Art</th>
+                                    <th class = "center">Nummer</th>
+                                    <th class = "center">Turnus</th>
+                                    <th class = "center">SWS</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                {{ range .Courses }}
+                                <tr>
+                                    <td>{{ .Title }}</td>
+                                    <td class = "center">{{ if .CourseType.Valid }}{{ .CourseType.String }}{{ end }}</td>
+                                    <td class = "center">{{ if .CourseID.Valid }}{{ .CourseID.String }}{{ end }}</td>
+                                    <td class = "center">{{ if .Cycle.Valid }}{{ .Cycle.String }}{{ end }}</td>
+                                    <td class = "center">{{ if .CreditHours.Valid }}{{ .CreditHours.Int64 }}{{ end }}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 

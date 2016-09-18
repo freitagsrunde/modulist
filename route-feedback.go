@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"html/template"
@@ -14,7 +15,7 @@ import (
 // Structs
 
 type ReviewModulePayload struct {
-	ID string `conform:"trim" validate:"required,uuid4"`
+	ID int `conform:"trim,num" validate:"required,min=1"`
 }
 
 // Functions
@@ -33,9 +34,14 @@ func (app *App) ReviewModule(c *gin.Context) {
 	app.CreateSession(c, *User)
 
 	// Extract ID of module to review from URL.
-	Payload := ReviewModulePayload{
-		ID: c.Param("moduleID"),
+	id, err := strconv.Atoi(c.Param("moduleID"))
+	if err != nil {
+		c.Redirect(http.StatusFound, "/modules")
+
+		return
 	}
+
+	Payload := ReviewModulePayload{ID: id}
 
 	// Check supplied ID for conformity and validity.
 	if errs := app.ConformAndValidate(&Payload); errs != nil {
@@ -46,7 +52,9 @@ func (app *App) ReviewModule(c *gin.Context) {
 
 	// Retrieve module information for supplied ID from database.
 	var Module db.Module
-	app.DB.First(&Module, "\"id\" = ?", Payload.ID)
+	app.DB.Preload("Courses").First(&Module, "\"id\" = ?", Payload.ID)
+
+	fmt.Println(Module.Courses)
 
 	// Only use this field if it contains a valid value.
 	if Module.ReferencePersonID.Valid {
@@ -58,6 +66,8 @@ func (app *App) ReviewModule(c *gin.Context) {
 		app.DB.Model(&Module).Related(&Module.ResponsiblePerson, "ResponsiblePersonID")
 	}
 
+	// For each of the elements containing free text with linebreaks,
+	// convert each of those to HTML linebreaks in a safely manner.
 	Module.LearningOutcomesHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.LearningOutcomes.String), "\n", "<br />", -1))
 	Module.LearningOutcomesEnglishHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.LearningOutcomesEnglish.String), "\n", "<br />", -1))
 	Module.TeachingContentsHTML = template.HTML(strings.Replace(template.HTMLEscapeString(Module.TeachingContents.String), "\n", "<br />", -1))

@@ -279,11 +279,6 @@ func (sqliteCourse SQLiteCourse) ToCourse() Course {
 	}
 }
 
-type ModuleCourses struct {
-	ModuleID int `gorm:"primary_key"`
-	CourseID int `gorm:"primary_key"`
-}
-
 type SQLiteModuleCourses struct {
 	ID       int `gorm:"column:id"`
 	ModuleID int `gorm:"column:mtsmodule_id"`
@@ -292,12 +287,4 @@ type SQLiteModuleCourses struct {
 
 func (sqliteModuleCourses *SQLiteModuleCourses) TableName() string {
 	return "modulecrawler_mtsmodule_courses"
-}
-
-func (sqliteModuleCourses SQLiteModuleCourses) ToModuleCourses() ModuleCourses {
-
-	return ModuleCourses{
-		ModuleID: sqliteModuleCourses.ModuleID,
-		CourseID: sqliteModuleCourses.CourseID,
-	}
 }

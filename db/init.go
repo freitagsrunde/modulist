@@ -68,7 +68,7 @@ func SetUpTables(db *gorm.DB) {
 	db.DropTableIfExists(&Module{})
 	db.DropTableIfExists(&Person{})
 	db.DropTableIfExists(&Course{})
-	db.DropTableIfExists(&ModuleCourses{})
+	db.DropTableIfExists("module_courses")
 
 	// Create new ones for all models.
 	db.CreateTable(&User{})
@@ -76,7 +76,6 @@ func SetUpTables(db *gorm.DB) {
 	db.CreateTable(&Module{})
 	db.CreateTable(&Person{})
 	db.CreateTable(&Course{})
-	db.CreateTable(&ModuleCourses{})
 }
 
 // TransferPersons connects to the provided SQLite database
@@ -185,14 +184,17 @@ func TransferModuleCourses(db *gorm.DB, modulesDBPath string) {
 
 	for _, sqliteModuleCoursesElem := range sqliteModuleCourses {
 
-		// Convert each link between a module and a course
-		// from SQLite database to a relationship made to be
-		// stored in main database.
-		var moduleCourses ModuleCourses
-		moduleCourses = sqliteModuleCoursesElem.ToModuleCourses()
+		// Find involved module and course.
+		var M Module
+		var C Course
+		db.First(&M, "\"id\" = ?", sqliteModuleCoursesElem.ModuleID)
+		db.First(&C, "\"id\" = ?", sqliteModuleCoursesElem.CourseID)
 
-		// Save relationship to main database.
-		db.Create(&moduleCourses)
+		// Add course to course list of specific module.
+		M.Courses = append(M.Courses, C)
+
+		// Update module in database.
+		db.Save(&M)
 	}
 
 	// Close connection to database.
