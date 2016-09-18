@@ -302,7 +302,33 @@
 
                     <h4 class = "space-down">Prüfungselemente:</h4>
 
-                    <p class = "space-down"><b>HINZUFÜGEN!!!</b></p>
+                    <div class = "table-responsive space-down">
+
+                        <table class = "table table-hover table-bordered">
+
+                            <thead>
+
+                                <tr>
+                                    <th class = "col-sm-8">Prüfungselement</th>
+                                    <th class = "center">Gewicht</th>
+                                    <th class = "center">Dauer</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                {{ range .ExamElements }}
+                                <tr>
+                                    <td class = "col-sm-8">{{ .Description }}</td>
+                                    <td class = "center">{{ .Points }}</td>
+                                    <td class = "center"></td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 

@@ -46,7 +46,8 @@ type Module struct {
 	TypeOfExamination           string        `gorm:"not null"`
 	ExaminationDescription      sql.NullString
 	ExaminationDescriptionHTML  template.HTML `gorm:"-"`
-	NumberOfTerms               int           `gorm:"not null"`
+	ExamElements                []ExamElement
+	NumberOfTerms               int `gorm:"not null"`
 	ParticipantLimitation       sql.NullInt64
 	RegistrationFormalities     sql.NullString
 	RegistrationFormalitiesHTML template.HTML `gorm:"-"`

@@ -52,7 +52,7 @@ func (app *App) ReviewModule(c *gin.Context) {
 
 	// Retrieve module information for supplied ID from database.
 	var Module db.Module
-	app.DB.Preload("Courses").Preload("WorkingEfforts").First(&Module, "\"id\" = ?", Payload.ID)
+	app.DB.Preload("Courses").Preload("WorkingEfforts").Preload("ExamElements").First(&Module, "\"id\" = ?", Payload.ID)
 
 	// Convert the working effort elements from database to
 	// structure better suited for displaying in HTML template.
