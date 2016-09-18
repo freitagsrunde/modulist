@@ -69,6 +69,7 @@ func SetUpTables(db *gorm.DB) {
 	db.DropTableIfExists(&Person{})
 	db.DropTableIfExists(&Course{})
 	db.DropTableIfExists(&WorkingEffort{})
+	db.DropTableIfExists(&ExamElement{})
 	db.DropTableIfExists("module_courses")
 
 	// Create new ones for all models.
@@ -78,6 +79,7 @@ func SetUpTables(db *gorm.DB) {
 	db.CreateTable(&Person{})
 	db.CreateTable(&Course{})
 	db.CreateTable(&WorkingEffort{})
+	db.CreateTable(&ExamElement{})
 }
 
 // TransferPersons connects to the provided SQLite database
@@ -206,7 +208,7 @@ func TransferModuleCourses(db *gorm.DB, modulesDBPath string) {
 // TransferWorkingEffort connects to the provided SQLite database
 // containing information about working effort and transfers
 // it into the main database.
-func TransferWorkingEffort(db *gorm.DB, modulesDBPath string) {
+func TransferWorkingEfforts(db *gorm.DB, modulesDBPath string) {
 
 	// Connect to SQLite database.
 	modulesDB, err := gorm.Open("sqlite3", modulesDBPath)
@@ -227,6 +229,36 @@ func TransferWorkingEffort(db *gorm.DB, modulesDBPath string) {
 
 		// Save working effort to main database.
 		db.Create(&workingEffort)
+	}
+
+	// Close connection to database.
+	modulesDB.Close()
+}
+
+// TransferExamElement connects to the provided SQLite database
+// that holds exam element information for Portfolio exams and
+// transfers it into the main database.
+func TransferExamElements(db *gorm.DB, modulesDBPath string) {
+
+	// Connect to SQLite database.
+	modulesDB, err := gorm.Open("sqlite3", modulesDBPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Select all exam elements from SQLite database.
+	var sqliteExamElements []SQLiteExamElement
+	modulesDB.Find(&sqliteExamElements)
+
+	for _, sqliteExamElement := range sqliteExamElements {
+
+		// Convert each exam element from SQLite database to
+		// exam element made to be stored in main database.
+		var examElement ExamElement
+		examElement = sqliteExamElement.ToExamElement()
+
+		// Save working effort to main database.
+		db.Create(&examElement)
 	}
 
 	// Close connection to database.

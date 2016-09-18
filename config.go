@@ -154,7 +154,8 @@ func InitApp() *App {
 		db.TransferCourses(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
 		db.TransferModules(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
 		db.TransferModuleCourses(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
-		db.TransferWorkingEffort(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
+		db.TransferWorkingEfforts(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
+		db.TransferExamElements(app.DB, os.Getenv("MODULES_SQLITE_PATH"))
 
 		// Default admin user creation.
 		fmt.Printf("\n\n\n========== Begin initializing MODULIST ==========\n\nCreate default admin user.\n")
