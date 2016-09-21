@@ -52,7 +52,7 @@ type Module struct {
 	RegistrationFormalities     sql.NullString
 	RegistrationFormalitiesHTML template.HTML `gorm:"-"`
 	Script                      bool          `gorm:"not null"`
-	ScriptEnglish               bool          `gorm:"not null"`
+	ScriptElectronic            bool          `gorm:"not null"`
 	Literature                  string        `gorm:"not null"`
 	LiteratureHTML              template.HTML `gorm:"-"`
 	Miscellaneous               sql.NullString
@@ -91,7 +91,7 @@ type SQLiteModule struct {
 	ParticipantLimitation   sql.NullInt64  `gorm:"column:participantLimitation"`
 	Miscellaneous           sql.NullString `gorm:"column:miscellaneous"`
 	Script                  bool           `gorm:"column:script"`
-	ScriptEnglish           bool           `gorm:"column:scriptEnglish"`
+	ScriptElectronic        bool           `gorm:"column:scriptElectronic"`
 	Literature              string         `gorm:"column:literature"`
 	ReferencePersonID       sql.NullInt64  `gorm:"column:referencePerson_id"`
 	ReferencePerson         Person         `gorm:"ForeignKey:ReferencePersonID;AssociationForeignKey:Refer;"`
@@ -140,7 +140,7 @@ func (sqliteModule SQLiteModule) ToModule(db *gorm.DB) Module {
 		ParticipantLimitation:   sqliteModule.ParticipantLimitation,
 		Miscellaneous:           sqliteModule.Miscellaneous,
 		Script:                  sqliteModule.Script,
-		ScriptEnglish:           sqliteModule.ScriptEnglish,
+		ScriptElectronic:        sqliteModule.ScriptElectronic,
 		Literature:              sqliteModule.Literature,
 		ReferencePersonID:       sqliteModule.ReferencePersonID,
 		ReferencePerson:         RefPerson,

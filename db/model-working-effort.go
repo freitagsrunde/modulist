@@ -9,6 +9,7 @@ import (
 type WorkingEffort struct {
 	ID          int           `gorm:"primary_key"`
 	ModuleID    sql.NullInt64 `gorm:"index"`
+	CourseID    sql.NullInt64 `gorm:"index"`
 	Description string        `gorm:"not null"`
 	Category    string        `gorm:"index;not null"`
 	Multiplier  float32       `gorm:"not null"`
@@ -19,6 +20,7 @@ type WorkingEffort struct {
 type SQLiteWorkingEffort struct {
 	ID          int           `gorm:"column:id"`
 	ModuleID    sql.NullInt64 `gorm:"column:module_id"`
+	CourseID    sql.NullInt64 `gorm:"column:course_id"`
 	Description string        `gorm:"column:description"`
 	Category    string        `gorm:"column:category"`
 	Multiplier  float32       `gorm:"column:multiplier"`
@@ -35,6 +37,7 @@ func (sqliteWorkingEffort SQLiteWorkingEffort) ToWorkingEffort() WorkingEffort {
 	return WorkingEffort{
 		ID:          sqliteWorkingEffort.ID,
 		ModuleID:    sqliteWorkingEffort.ModuleID,
+		CourseID:    sqliteWorkingEffort.CourseID,
 		Description: sqliteWorkingEffort.Description,
 		Category:    sqliteWorkingEffort.Category,
 		Multiplier:  sqliteWorkingEffort.Multiplier,

@@ -1,34 +1,21 @@
-function submitFeedback(id) {
+function submitFeedback(moduleID, catID) {
 
     var obj = {
-        comment: $("#comment-" + id).val()
+        category: catID,
+        comment: $("#comment-form-" + catID).val()
     };
 
-    $.post("addFeedback/" + id, obj, function(data) {
+    $.post("/review/module/" + moduleID + "/add", obj, function(data) {
 
-        if (data.ReturnValue) {
-            $("#comment-body-" + id)[0].innerHTML += '<div style="float: right"><span onclick="deleteFeedback(' + data.SavedAsID + ')" style="cursor:pointer; color:#bbb;" class="glyphicon glyphicon-trash"></span></div><b>' + data.UserName + " schrieb:</b><p>" + $("#comment-" + id).val() + "</p><hr>";
-            $("#comment-" + id).val("")
-            updateBadges();
+        if (data.Success) {
+
+            for (var i = 0; i < data.Feedback.length; i++) {
+                $("#comment-view-" + catID)[0].innerHTML += "<p>" + data.Feedback[i].Comment + "</p>";
+            }
+            $("#comment-form-" + catID).val("");
+            $("#comment-header-" + catID)[0].innerHTML = "Feedback <span class = \"badge\">" + data.Count + "</span>";
         }
     });
-}
-
-function updateBadges() {
-
-    pnlgroup = $(".panel-group")
-
-    for (var i = 0; i < pnlgroup.length; i++) {
-
-        pnl = $(pnlgroup[i])
-        count = pnl.find("hr").length
-
-        if (count > 0) {
-            pnl.find("h4 > a")[0].innerHTML = '<span class="badge">' + count + '</span> Zeige Feedback'
-        } else {
-            pnl.find("h4 > a")[0].innerHTML = 'Zeige Feedback'
-        }
-    }
 }
 
 function deleteFeedback(id) {
@@ -43,6 +30,22 @@ function deleteFeedback(id) {
     }
 }
 
+function updateAllCounts(moduleID) {
+
+    $.get("/review/module/" + moduleID + "/comments", function(data) {
+
+        if (data.Success) {
+
+            // TODO: Finish this.
+            console.log(data.Feedback);
+        }
+    });
+}
+
 $(function() {
-    updateBadges()
-});
+
+    var path = window.location.pathname;
+    var moduleID = path.split("/")[3];
+
+    updateAllCounts(moduleID);
+})

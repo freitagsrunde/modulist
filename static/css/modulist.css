@@ -37,3 +37,5 @@ main.container-fluid { margin: 0 15px; }
 }
 
 a[data-toggle]:hover { text-decoration: none; }
+
+.feedback-textarea { margin: 0 0 15px; }

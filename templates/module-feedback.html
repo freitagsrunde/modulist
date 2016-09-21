@@ -6,13 +6,9 @@
     </head>
 
     <body>
-
         {{ template "navbar" . }}
-
         <main class = "container-fluid">
-
             {{ with .Module }}
-
             <div class = "row">
 
                 <h2>Feedback zu <b>{{ if .Title.Valid }}{{ .Title.String }}{{ else }}<i>nicht angegeben</i>{{ end }}</b></h2>
@@ -88,7 +84,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "Header" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "Header" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "Header" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "Header" }})">Feedback geben</button>
 
                 </div>
 
@@ -112,7 +114,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "LearningOutcomes" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "LearningOutcomes" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "LearningOutcomes" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "LearningOutcomes" }})">Feedback geben</button>
 
                 </div>
 
@@ -136,7 +144,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "TeachingContents" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "TeachingContents" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "TeachingContents" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "TeachingContents" }})">Feedback geben</button>
 
                 </div>
 
@@ -186,7 +200,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "Courses" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "Courses" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "Courses" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "Courses" }})">Feedback geben</button>
 
                 </div>
 
@@ -234,7 +254,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "WorkingEffort" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "WorkingEffort" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "WorkingEffort" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "WorkingEffort" }})">Feedback geben</button>
 
                 </div>
 
@@ -252,7 +278,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "InstructiveForm" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "InstructiveForm" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "InstructiveForm" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "InstructiveForm" }})">Feedback geben</button>
 
                 </div>
 
@@ -276,7 +308,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "Requirements" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "Requirements" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "Requirements" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "Requirements" }})">Feedback geben</button>
 
                 </div>
 
@@ -290,7 +328,7 @@
 
                     <h4 class = "space-down">Prüfungsform:</h4>
 
-                    <p class = "space-down">{{ if eq .TypeOfExamination "P" }}Portfolioprüfung{{ else if eq .TypeOfExamination "S" }}schriftlich{{ else if eq .TypeOfExamination "M" }}mündlich{{ end }}</p>
+                    <p class = "space-down">{{ if eq .TypeOfExamination "P" }}Portfolioprüfung{{ else if eq .TypeOfExamination "S" }}schriftlich{{ else if eq .TypeOfExamination "M" }}mündlich{{ else }}{{ .TypeOfExamination }}{{ end }}</p>
 
                     <h4 class = "space-down">Benotet:</h4>
 
@@ -334,7 +372,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "Examination" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "Examination" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "Examination" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "Examination" }})">Feedback geben</button>
 
                 </div>
 
@@ -352,7 +396,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "NumberOfTerms" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "NumberOfTerms" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "NumberOfTerms" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "NumberOfTerms" }})">Feedback geben</button>
 
                 </div>
 
@@ -370,7 +420,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "ParticipantLimitation" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "ParticipantLimitation" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "ParticipantLimitation" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "ParticipantLimitation" }})">Feedback geben</button>
 
                 </div>
 
@@ -388,7 +444,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "RegistrationFormalities" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "RegistrationFormalities" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "RegistrationFormalities" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "RegistrationFormalities" }})">Feedback geben</button>
 
                 </div>
 
@@ -400,19 +462,25 @@
 
                     <h3 class = "space-down">Skript</h3>
 
-                    <h4 class = "space-down">Deutsch <b>(oder ist es 'Papierform'?)</b>:</h4>
+                    <h4 class = "space-down">Skript in Papierform:</h4>
 
-                    <p class = "space-down">{{ if eq .Script true }}Es wird ein Skript auf Deutsch angeboten.{{ else }}<i>nicht verfügbar</i>{{ end }}</p>
+                    <p class = "space-down">{{ if eq .Script true }}Es wird ein Skript in Papierform angeboten.{{ else }}<i>nicht verfügbar</i>{{ end }}</p>
 
-                    <h4 class = "space-down">Englisch <b>(oder ist es 'elektronisch'?)</b>:</h4>
+                    <h4 class = "space-down">Elektronisches Skript:</h4>
 
-                    <p class = "space-down">{{ if eq .ScriptEnglish true }}Es wird ein Skript auf Englisch angeboten.{{ else }}<i>nicht verfügbar</i>{{ end }}</p>
+                    <p class = "space-down">{{ if eq .ScriptElectronic true }}Es wird ein elektronisches Skript angeboten.{{ else }}<i>nicht verfügbar</i>{{ end }}</p>
 
                 </div>
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "Script" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "Script" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "Script" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "Script" }})">Feedback geben</button>
 
                 </div>
 
@@ -430,7 +498,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "Literature" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "Literature" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "Literature" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "Literature" }})">Feedback geben</button>
 
                 </div>
 
@@ -448,7 +522,13 @@
 
                 <div class = "col-sm-5 space-left">
 
-                    <h3 class = "space-down">Feedback</h3>
+                    <h3 id = "comment-header-{{ index $.Categories "Miscellaneous" }}" class = "space-down">Feedback <span class = "badge"></span></h3>
+
+                    <div id = "comment-view-{{ index $.Categories "Miscellaneous" }}"></div>
+
+                    <textarea id = "comment-form-{{ index $.Categories "Miscellaneous" }}" name = "comment" class = "form-control feedback-textarea" rows = "7"></textarea>
+
+                    <button class = "btn btn-primary" onclick = "submitFeedback({{ .ID }}, {{ index $.Categories "Miscellaneous" }})">Feedback geben</button>
 
                 </div>
 
@@ -461,7 +541,6 @@
         <script src = "/static/js/jquery.min.js"></script>
         <script src = "/static/js/bootstrap.min.js"></script>
         <script src = "/static/js/feedback.js"></script>
-        <script src = "/static/js/modules.js"></script>
 
     </body>
 

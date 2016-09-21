@@ -70,6 +70,7 @@ func SetUpTables(db *gorm.DB) {
 	db.DropTableIfExists(&Course{})
 	db.DropTableIfExists(&WorkingEffort{})
 	db.DropTableIfExists(&ExamElement{})
+	db.DropTableIfExists(&Feedback{})
 	db.DropTableIfExists("module_courses")
 
 	// Create new ones for all models.
@@ -80,6 +81,7 @@ func SetUpTables(db *gorm.DB) {
 	db.CreateTable(&Course{})
 	db.CreateTable(&WorkingEffort{})
 	db.CreateTable(&ExamElement{})
+	db.CreateTable(&Feedback{})
 }
 
 // TransferPersons connects to the provided SQLite database

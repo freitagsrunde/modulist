@@ -11,7 +11,6 @@ type Course struct {
 	Title               string `gorm:"not null"`
 	CourseType          sql.NullString
 	CourseID            sql.NullString
-	Cycle               sql.NullString
 	CreditHours         sql.NullInt64
 	Annotation          sql.NullString
 	Content             sql.NullString
@@ -23,6 +22,7 @@ type Course struct {
 	CourseAssessment    sql.NullString
 	Literature          sql.NullString
 	TeachingContents    sql.NullString
+	Cycle               sql.NullString
 }
 
 type SQLiteCourse struct {
@@ -30,7 +30,6 @@ type SQLiteCourse struct {
 	Title               string         `gorm:"column:title"`
 	CourseType          sql.NullString `gorm:"column:courseType"`
 	CourseID            sql.NullString `gorm:"column:courseID"`
-	Cycle               sql.NullString `gorm:"column:cycle"`
 	CreditHours         sql.NullInt64  `gorm:"column:creditHours"`
 	Annotation          sql.NullString `gorm:"column:annotation"`
 	Content             sql.NullString `gorm:"column:content"`
@@ -42,6 +41,7 @@ type SQLiteCourse struct {
 	CourseAssessment    sql.NullString `gorm:"column:courseAssessment"`
 	Literature          sql.NullString `gorm:"column:literature"`
 	TeachingContents    sql.NullString `gorm:"column:teachingContents"`
+	Cycle               sql.NullString `gorm:"column:cycle"`
 }
 
 func (sqliteCourse *SQLiteCourse) TableName() string {
@@ -55,7 +55,6 @@ func (sqliteCourse SQLiteCourse) ToCourse() Course {
 		Title:               sqliteCourse.Title,
 		CourseType:          sqliteCourse.CourseType,
 		CourseID:            sqliteCourse.CourseID,
-		Cycle:               sqliteCourse.Cycle,
 		CreditHours:         sqliteCourse.CreditHours,
 		Annotation:          sqliteCourse.Annotation,
 		Content:             sqliteCourse.Content,
@@ -67,6 +66,7 @@ func (sqliteCourse SQLiteCourse) ToCourse() Course {
 		CourseAssessment:    sqliteCourse.CourseAssessment,
 		Literature:          sqliteCourse.Literature,
 		TeachingContents:    sqliteCourse.TeachingContents,
+		Cycle:               sqliteCourse.Cycle,
 	}
 }
 
